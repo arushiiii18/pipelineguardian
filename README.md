@@ -172,6 +172,11 @@ Get a free Groq API key at https://console.groq.com — no card required.
 
 ## Status
 
-Deterministic tools, agent orchestration, LLM tool, eval harness, and
-demo pair: built and verified. CLI, FastAPI backend, frontend, and
-deployment: in progress.
+Complete and deployed.
+
+- Backend: https://pipelineguardian-api.onrender.com (Render free tier — cold
+  starts after 15min idle, ~30-50s on first request)
+- Frontend: https://pipelineguardian-eight.vercel.app
+- Try it: upload any file from `eval/synthetic_notebooks/` — `01_scaler_leak.py`
+  through `12_group_leak_random_split.py` for individual checks, or
+  `demo_before.ipynb` / `demo_after.ipynb` for the full before/after comparison.
