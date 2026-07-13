@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PipelineGuardian</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #151b23;
+    --border: #2a323d;
+    --text: #d5dae1;
+    --muted: #8a94a3;
+    --accent: #4fd1c5;
+    --high: #f0655a;
+    --medium: #e8b64c;
+    --low: #6b93d6;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.5;
+  }
+  header {
+    padding: 2.5rem 1.5rem 1.5rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  header h1 {
+    font-family: var(--mono);
+    font-size: 1.4rem;
+    margin: 0 0 0.4rem;
+    letter-spacing: -0.01em;
+  }
+  header h1::before { content: "> "; color: var(--accent); }
+  header p { color: var(--muted); margin: 0; font-size: 0.92rem; }
+
+  main { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; margin-top: 1rem; }
+  label:first-child { margin-top: 0; }
+  input[type="file"], input[type="text"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    font-size: 0.88rem;
+    font-family: inherit;
+  }
+  input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; }
+
+  button {
+    margin-top: 1.5rem;
+    background: var(--accent);
+    color: #05201d;
+    border: none;
+    border-radius: 6px;
+    padding: 0.65rem 1.3rem;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+  #status { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); margin-top: 1rem; }
+
+  .summary { display: flex; gap: 1.5rem; margin-bottom: 1.2rem; font-family: var(--mono); font-size: 0.85rem; }
+  .summary span.n { font-size: 1.3rem; display: block; }
+
+  .issue {
+    border: 1px solid var(--border);
+    border-left-width: 4px;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.9rem;
+    background: var(--bg);
+  }
+  .issue.high { border-left-color: var(--high); }
+  .issue.medium { border-left-color: var(--medium); }
+  .issue.low { border-left-color: var(--low); }
+  .issue-top { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .badge {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .badge.high { background: rgba(240,101,90,0.15); color: var(--high); }
+  .badge.medium { background: rgba(232,182,76,0.15); color: var(--medium); }
+  .badge.low { background: rgba(107,147,214,0.15); color: var(--low); }
+  .badge.confidence { background: rgba(138,148,163,0.15); color: var(--muted); }
+  .check-name { font-family: var(--mono); font-size: 0.88rem; color: var(--text); }
+  .issue p { margin: 0.35rem 0; font-size: 0.9rem; }
+  .issue .label { color: var(--muted); font-size: 0.78rem; }
+  .issue code {
+    font-family: var(--mono); font-size: 0.82rem; background: var(--panel);
+    padding: 0.1rem 0.35rem; border-radius: 4px; display: inline-block; margin-top: 0.15rem;
+  }
+  .empty { color: var(--muted); font-family: var(--mono); font-size: 0.9rem; text-align: center; padding: 2rem 0; }
+  .tools-line { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>pipelineguardian</h1>
+  <p>Audits ML notebooks and scripts for leakage, reproducibility gaps, and validation-strategy mismatches. No composite score — every issue reported on its own evidence.</p>
+</header>
+
+<main>
+  <div class="panel">
+    <label for="sourceFile">Notebook or script</label>
+    <input type="file" id="sourceFile" accept=".ipynb,.py">
+    <p class="hint">.ipynb or .py</p>
+
+    <label for="dataFile">Dataset CSV (optional)</label>
+    <input type="file" id="dataFile" accept=".csv">
+    <p class="hint">Enables the timestamp / group / imbalance checks — without it, only leakage and reproducibility checks run.</p>
+
+    <label for="targetCol">Target column (optional, requires dataset)</label>
+    <input type="text" id="targetCol" placeholder="e.g. churn">
+
+    <label for="apiUrl">API URL</label>
+    <input type="text" id="apiUrl" value="http://localhost:8000">
+    <p class="hint">Pointed at the deployed backend by default in production — editable here for local testing.</p>
+
+    <button id="runBtn">Run audit</button>
+    <div id="status"></div>
+  </div>
+
+  <div id="results"></div>
+</main>
+
+<script>
+const runBtn = document.getElementById('runBtn');
+const statusEl = document.getElementById('status');
+const resultsEl = document.getElementById('results');
+
+runBtn.addEventListener('click', async () => {
+  const sourceFile = document.getElementById('sourceFile').files[0];
+  const dataFile = document.getElementById('dataFile').files[0];
+  const targetCol = document.getElementById('targetCol').value.trim();
+  const apiUrl = document.getElementById('apiUrl').value.trim().replace(/\/$/, '');
+
+  if (!sourceFile) {
+    statusEl.textContent = 'Choose a .ipynb or .py file first.';
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('source_file', sourceFile);
+  if (dataFile) formData.append('data_file', dataFile);
+  if (targetCol) formData.append('target_col', targetCol);
+
+  runBtn.disabled = true;
+  resultsEl.innerHTML = '';
+  statusEl.textContent = 'Running audit — the backend may take 30-50s to wake up on first request (free-tier cold start).';
+
+  try {
+    const res = await fetch(apiUrl + '/audit', { method: 'POST', body: formData });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: res.statusText }));
+      throw new Error(err.detail || 'Request failed');
+    }
+    const report = await res.json();
+    renderReport(report);
+    statusEl.textContent = '';
+  } catch (e) {
+    statusEl.textContent = 'Error: ' + e.message;
+  } finally {
+    runBtn.disabled = false;
+  }
+});
+
+function renderReport(report) {
+  const issues = report.issues || [];
+  const counts = { high: 0, medium: 0, low: 0 };
+  issues.forEach(i => counts[i.severity] = (counts[i.severity] || 0) + 1);
+
+  let html = `<div class="tools-line">ran: ${report.tools_run.join(', ')}`;
+  if (report.tools_skipped && report.tools_skipped.length) {
+    html += ` &nbsp;|&nbsp; skipped: ${report.tools_skipped.join(', ')}`;
+  }
+  html += `</div>`;
+
+  html += `<div class="summary">
+    <div><span class="n" style="color:var(--high)">${counts.high || 0}</span>high</div>
+    <div><span class="n" style="color:var(--medium)">${counts.medium || 0}</span>medium</div>
+    <div><span class="n" style="color:var(--low)">${counts.low || 0}</span>low</div>
+  </div>`;
+
+  if (issues.length === 0) {
+    html += `<div class="panel empty">No issues found.</div>`;
+  } else {
+    issues.sort((a, b) => ({high:0,medium:1,low:2}[a.severity] - {high:0,medium:1,low:2}[b.severity]));
+    issues.forEach(issue => {
+      const loc = issue.line ? ` &middot; line ${issue.line}${issue.cell !== null && issue.cell !== undefined ? ', cell ' + issue.cell : ''}` : '';
+      html += `<div class="issue ${issue.severity}">
+        <div class="issue-top">
+          <span class="badge ${issue.severity}">${issue.severity}</span>
+          <span class="badge confidence">${issue.confidence}</span>
+          <span class="check-name">${escapeHtml(issue.check_name)}${loc}</span>
+        </div>
+        <p>${escapeHtml(issue.message)}</p>
+        <p class="label">evidence</p>
+        <code>${escapeHtml(issue.evidence)}</code>
+        <p class="label" style="margin-top:0.6rem">suggested fix</p>
+        <p>${escapeHtml(issue.suggested_fix)}</p>
+      </div>`;
+    });
+  }
+  resultsEl.innerHTML = html;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+</script>
+
+</body>
+</html>
