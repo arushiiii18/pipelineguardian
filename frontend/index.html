@@ -6,172 +6,331 @@
 <title>PipelineGuardian</title>
 <style>
   :root {
-    --bg: #0d1117;
-    --panel: #151b23;
-    --border: #2a323d;
-    --text: #d5dae1;
-    --muted: #8a94a3;
+    --bg: #0a0e14;
+    --panel: #10151d;
+    --panel-hover: #141a24;
+    --border: #232b38;
+    --border-hover: #37414f;
+    --text: #d9dee6;
+    --muted: #7a8494;
     --accent: #4fd1c5;
+    --accent-dim: #2a5f5a;
     --high: #f0655a;
     --medium: #e8b64c;
     --low: #6b93d6;
     --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     background: var(--bg);
+    background-image: radial-gradient(circle at 15% 0%, rgba(79,209,197,0.06), transparent 40%);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    line-height: 1.5;
+    font-family: var(--sans);
+    line-height: 1.55;
   }
-  header {
-    padding: 2.5rem 1.5rem 1.5rem;
-    max-width: 760px;
-    margin: 0 auto;
-  }
-  header h1 {
-    font-family: var(--mono);
-    font-size: 1.4rem;
-    margin: 0 0 0.4rem;
-    letter-spacing: -0.01em;
-  }
-  header h1::before { content: "> "; color: var(--accent); }
-  header p { color: var(--muted); margin: 0; font-size: 0.92rem; }
 
-  main { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+  /* ---------- Hero ---------- */
+  .hero { max-width: 780px; margin: 0 auto; padding: 3.5rem 1.5rem 1.5rem; }
+  .hero .kicker {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 0.9rem;
+  }
+  .hero h1 {
+    font-size: 2.6rem; margin: 0 0 0.6rem; letter-spacing: -0.02em; font-weight: 700;
+  }
+  .hero .tagline { color: var(--muted); font-size: 1.05rem; margin: 0 0 1.6rem; max-width: 56ch; }
+  .hero .philosophy {
+    font-family: var(--mono); font-size: 0.88rem; color: #9aa5b3;
+    border-left: 2px solid var(--accent); padding-left: 0.9rem; margin: 0 0 1.8rem;
+  }
+  .hero .philosophy span { color: var(--accent); }
 
+  .check-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .check-pill {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    border: 1px solid var(--border); border-radius: 20px;
+    padding: 0.4rem 0.9rem 0.4rem 0.7rem;
+    font-size: 0.82rem; color: var(--text); background: var(--panel);
+  }
+  .check-pill svg { flex-shrink: 0; }
+  .check-pill.inferred { border-style: dashed; color: var(--muted); }
+
+  main { max-width: 780px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
+
+  /* ---------- Example output preview ---------- */
+  .preview-label { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 2.2rem 0 0.7rem; }
+  .preview-card {
+    border: 1px solid var(--border); border-left: 4px solid var(--high); border-radius: 8px;
+    padding: 1rem 1.2rem; background: var(--panel); margin-bottom: 2.4rem;
+  }
+  .preview-top { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .preview-card .msg { font-size: 0.92rem; margin: 0.3rem 0; }
+  .preview-card code {
+    font-family: var(--mono); font-size: 0.82rem; background: var(--bg);
+    padding: 0.15rem 0.4rem; border-radius: 4px; display: inline-block;
+  }
+
+  /* ---------- Panel / form ---------- */
   .panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.6rem; margin-bottom: 1.4rem;
   }
-  label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; margin-top: 1rem; }
-  label:first-child { margin-top: 0; }
-  input[type="file"], input[type="text"] {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    padding: 0.6rem 0.7rem;
-    font-size: 0.88rem;
-    font-family: inherit;
+  label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+
+  /* Examples row */
+  .examples-label { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.6rem; }
+  .examples-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.6rem; }
+  .example-btn {
+    font-family: var(--mono); font-size: 0.78rem; background: transparent;
+    border: 1px solid var(--border); color: var(--text); border-radius: 6px;
+    padding: 0.45rem 0.8rem; cursor: pointer; transition: border-color 0.15s, color 0.15s;
+  }
+  .example-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .example-btn:disabled { opacity: 0.5; cursor: wait; }
+
+  /* Dropzones */
+  .dropzone {
+    border: 1.5px dashed var(--border); border-radius: 8px;
+    padding: 1.6rem 1rem; text-align: center; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    margin-bottom: 1.1rem;
+  }
+  .dropzone:hover, .dropzone.drag-over { border-color: var(--accent); background: rgba(79,209,197,0.04); }
+  .dropzone svg { opacity: 0.6; margin-bottom: 0.5rem; }
+  .dropzone .dz-title { font-size: 0.9rem; color: var(--text); margin-bottom: 0.2rem; }
+  .dropzone .dz-sub { font-size: 0.78rem; color: var(--muted); }
+  .dropzone .dz-filename { font-family: var(--mono); font-size: 0.82rem; color: var(--accent); margin-top: 0.4rem; }
+  .dropzone input[type="file"] { display: none; }
+
+  input[type="text"] {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+    border-radius: 6px; padding: 0.6rem 0.7rem; font-size: 0.88rem; font-family: inherit;
   }
   input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; }
+  .hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.35rem; }
 
-  button {
-    margin-top: 1.5rem;
-    background: var(--accent);
-    color: #05201d;
-    border: none;
-    border-radius: 6px;
-    padding: 0.65rem 1.3rem;
-    font-weight: 600;
-    font-size: 0.92rem;
-    cursor: pointer;
+  details.advanced { margin-top: 0.4rem; }
+  details.advanced summary {
+    font-size: 0.8rem; color: var(--muted); cursor: pointer; user-select: none;
+    list-style: none;
   }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
-  button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  details.advanced summary::-webkit-details-marker { display: none; }
+  details.advanced summary::before { content: "▸ "; }
+  details.advanced[open] summary::before { content: "▾ "; }
+  details.advanced .advanced-body { margin-top: 0.8rem; }
+
+  button.run {
+    margin-top: 1.5rem; background: var(--accent); color: #04211d; border: none;
+    border-radius: 6px; padding: 0.7rem 1.4rem; font-weight: 700; font-size: 0.92rem;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  button.run:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.run:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 
   #status { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); margin-top: 1rem; }
+  .spinner {
+    display: inline-block; width: 12px; height: 12px; border: 2px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite;
+    vertical-align: -2px; margin-right: 0.4rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ---------- Results ---------- */
+  .tools-line { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-bottom: 1rem; }
   .summary { display: flex; gap: 1.5rem; margin-bottom: 1.2rem; font-family: var(--mono); font-size: 0.85rem; }
   .summary span.n { font-size: 1.3rem; display: block; }
 
   .issue {
-    border: 1px solid var(--border);
-    border-left-width: 4px;
-    border-radius: 6px;
-    padding: 1rem 1.1rem;
-    margin-bottom: 0.9rem;
-    background: var(--bg);
+    border: 1px solid var(--border); border-left-width: 4px; border-radius: 8px;
+    padding: 1rem 1.1rem; margin-bottom: 0.9rem; background: var(--panel);
   }
   .issue.high { border-left-color: var(--high); }
   .issue.medium { border-left-color: var(--medium); }
   .issue.low { border-left-color: var(--low); }
   .issue-top { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
   .badge {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    padding: 0.15rem 0.5rem;
-    border-radius: 4px;
-    font-weight: 700;
+    font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase;
+    padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 700;
   }
   .badge.high { background: rgba(240,101,90,0.15); color: var(--high); }
   .badge.medium { background: rgba(232,182,76,0.15); color: var(--medium); }
   .badge.low { background: rgba(107,147,214,0.15); color: var(--low); }
-  .badge.confidence { background: rgba(138,148,163,0.15); color: var(--muted); }
+  .badge.confidence { background: rgba(122,132,148,0.15); color: var(--muted); }
   .check-name { font-family: var(--mono); font-size: 0.88rem; color: var(--text); }
   .issue p { margin: 0.35rem 0; font-size: 0.9rem; }
   .issue .label { color: var(--muted); font-size: 0.78rem; }
   .issue code {
-    font-family: var(--mono); font-size: 0.82rem; background: var(--panel);
+    font-family: var(--mono); font-size: 0.82rem; background: var(--bg);
     padding: 0.1rem 0.35rem; border-radius: 4px; display: inline-block; margin-top: 0.15rem;
   }
   .empty { color: var(--muted); font-family: var(--mono); font-size: 0.9rem; text-align: center; padding: 2rem 0; }
-  .tools-line { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-bottom: 1rem; }
+
+  footer { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 3rem; color: var(--muted); font-size: 0.78rem; font-family: var(--mono); }
+  footer a { color: var(--muted); }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>pipelineguardian</h1>
-  <p>Audits ML notebooks and scripts for leakage, reproducibility gaps, and validation-strategy mismatches. No composite score — every issue reported on its own evidence.</p>
-</header>
+<div class="hero">
+  <p class="kicker">ML pipeline auditor</p>
+  <h1>PipelineGuardian</h1>
+  <p class="tagline">Finds ML bugs your linter can't see — data leakage, reproducibility gaps, and validation-strategy mismatches — with evidence, not a vibe.</p>
+  <p class="philosophy"><span>AST</span> where rules are enough. <span>LLM</span> where context matters.</p>
+
+  <div class="check-row">
+    <span class="check-pill"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#4fd1c5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Data leakage</span>
+    <span class="check-pill"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#4fd1c5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reproducibility</span>
+    <span class="check-pill inferred"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#7a8494" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Validation strategy (LLM, conditional)</span>
+  </div>
+</div>
 
 <main>
+  <p class="preview-label">Example output</p>
+  <div class="preview-card">
+    <div class="preview-top">
+      <span class="badge high">high</span>
+      <span class="badge confidence">deterministic</span>
+      <span class="check-name">scaler_fit_before_split</span>
+    </div>
+    <p class="msg">Scaler is fit on the full dataset before train_test_split — statistics from the test set leak into training.</p>
+    <p class="label" style="margin-top:0.6rem">evidence</p>
+    <code>scaler.fit_transform(X)</code>
+  </div>
+
   <div class="panel">
-    <label for="sourceFile">Notebook or script</label>
-    <input type="file" id="sourceFile" accept=".ipynb,.py">
-    <p class="hint">.ipynb or .py</p>
+    <p class="examples-label">Try an example — loads a real file from the repo, no upload needed</p>
+    <div class="examples-row">
+      <button class="example-btn" data-file="01_scaler_leak.py">Leakage example</button>
+      <button class="example-btn" data-file="12_group_leak_random_split.py">Group leakage example</button>
+      <button class="example-btn" data-file="10_all_clean_baseline.py">Clean notebook</button>
+    </div>
 
-    <label for="dataFile">Dataset CSV (optional)</label>
-    <input type="file" id="dataFile" accept=".csv">
-    <p class="hint">Enables the timestamp / group / imbalance checks — without it, only leakage and reproducibility checks run.</p>
+    <label>Notebook or script</label>
+    <div class="dropzone" id="dzSource" tabindex="0">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#7a8494" stroke-width="1.5"/><path d="M14 2v6h6" stroke="#7a8494" stroke-width="1.5"/></svg>
+      <div class="dz-title">Drop notebook or script here, or click to browse</div>
+      <div class="dz-sub">.ipynb or .py</div>
+      <div class="dz-filename" id="sourceFileName"></div>
+      <input type="file" id="sourceFile" accept=".ipynb,.py">
+    </div>
 
-    <label for="targetCol">Target column (optional, requires dataset)</label>
+    <label>Dataset CSV <span style="opacity:0.6">(optional)</span></label>
+    <div class="dropzone" id="dzData" tabindex="0">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#7a8494" stroke-width="1.5"/><path d="M3 9h18M9 9v11" stroke="#7a8494" stroke-width="1.5"/></svg>
+      <div class="dz-title">Drop a CSV here to enable schema checks</div>
+      <div class="dz-sub">Timestamp / group / imbalance detection</div>
+      <div class="dz-filename" id="dataFileName"></div>
+      <input type="file" id="dataFile" accept=".csv">
+    </div>
+
+    <label for="targetCol">Target column <span style="opacity:0.6">(optional, requires dataset)</span></label>
     <input type="text" id="targetCol" placeholder="e.g. churn">
 
-    <label for="apiUrl">API URL</label>
-    <input type="text" id="apiUrl" value="https://pipelineguardian-api.onrender.com">
-    <p class="hint">Pointed at the deployed backend by default in production.</p>
+    <details class="advanced">
+      <summary>Advanced</summary>
+      <div class="advanced-body">
+        <label for="apiUrl">API URL</label>
+        <input type="text" id="apiUrl" value="https://pipelineguardian-api.onrender.com">
+        <p class="hint">Defaults to the deployed backend — only change this for local testing.</p>
+      </div>
+    </details>
 
-    <button id="runBtn">Run audit</button>
+    <button class="run" id="runBtn">Run audit</button>
     <div id="status"></div>
   </div>
 
   <div id="results"></div>
 </main>
 
+<footer>
+  <a href="https://github.com/arushiiii18/pipelineguardian" target="_blank">source on GitHub</a> · free-tier backend, first request after idle may take 30-50s
+</footer>
+
 <script>
+const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/arushiiii18/pipelineguardian/main/eval/synthetic_notebooks/';
+
+const sourceInput = document.getElementById('sourceFile');
+const dataInput = document.getElementById('dataFile');
+const dzSource = document.getElementById('dzSource');
+const dzData = document.getElementById('dzData');
+const sourceFileName = document.getElementById('sourceFileName');
+const dataFileName = document.getElementById('dataFileName');
 const runBtn = document.getElementById('runBtn');
 const statusEl = document.getElementById('status');
 const resultsEl = document.getElementById('results');
 
+let loadedSourceFile = null; // File object, may come from disk or from a fetched example
+
+function setupDropzone(zone, input, nameEl, onFile) {
+  zone.addEventListener('click', () => input.click());
+  zone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') input.click(); });
+  input.addEventListener('change', () => {
+    if (input.files[0]) onFile(input.files[0]);
+  });
+  ['dragover', 'dragenter'].forEach(evt =>
+    zone.addEventListener(evt, (e) => { e.preventDefault(); zone.classList.add('drag-over'); })
+  );
+  ['dragleave', 'drop'].forEach(evt =>
+    zone.addEventListener(evt, (e) => { e.preventDefault(); zone.classList.remove('drag-over'); })
+  );
+  zone.addEventListener('drop', (e) => {
+    const file = e.dataTransfer.files[0];
+    if (file) onFile(file);
+  });
+}
+
+setupDropzone(dzSource, sourceInput, sourceFileName, (file) => {
+  loadedSourceFile = file;
+  sourceFileName.textContent = file.name;
+});
+setupDropzone(dzData, dataInput, dataFileName, (file) => {
+  dataFileName.textContent = file.name;
+});
+
+document.querySelectorAll('.example-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const filename = btn.dataset.file;
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'loading…';
+    try {
+      const res = await fetch(GITHUB_RAW_BASE + filename);
+      if (!res.ok) throw new Error('Could not fetch example (' + res.status + ')');
+      const text = await res.text();
+      const file = new File([text], filename, { type: 'text/x-python' });
+      loadedSourceFile = file;
+      sourceFileName.textContent = filename + ' (example)';
+      dataInput.value = '';
+      dataFileName.textContent = '';
+    } catch (e) {
+      statusEl.textContent = 'Error loading example: ' + e.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  });
+});
+
 runBtn.addEventListener('click', async () => {
-  const sourceFile = document.getElementById('sourceFile').files[0];
-  const dataFile = document.getElementById('dataFile').files[0];
+  const dataFile = dataInput.files[0];
   const targetCol = document.getElementById('targetCol').value.trim();
   const apiUrl = document.getElementById('apiUrl').value.trim().replace(/\/$/, '');
 
-  if (!sourceFile) {
-    statusEl.textContent = 'Choose a .ipynb or .py file first.';
+  if (!loadedSourceFile) {
+    statusEl.textContent = 'Choose a .ipynb/.py file, drop one in, or try an example above.';
     return;
   }
 
   const formData = new FormData();
-  formData.append('source_file', sourceFile);
+  formData.append('source_file', loadedSourceFile);
   if (dataFile) formData.append('data_file', dataFile);
   if (targetCol) formData.append('target_col', targetCol);
 
   runBtn.disabled = true;
   resultsEl.innerHTML = '';
-  statusEl.textContent = 'Running audit — the backend may take 30-50s to wake up on first request (free-tier cold start).';
+  statusEl.innerHTML = '<span class="spinner"></span>Running audit — the backend may take 30-50s to wake up on first request.';
 
   try {
     const res = await fetch(apiUrl + '/audit', { method: 'POST', body: formData });
