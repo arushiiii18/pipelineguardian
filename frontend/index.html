@@ -8,13 +8,10 @@
   :root {
     --bg: #0a0e14;
     --panel: #10151d;
-    --panel-hover: #141a24;
     --border: #232b38;
-    --border-hover: #37414f;
     --text: #d9dee6;
     --muted: #7a8494;
     --accent: #4fd1c5;
-    --accent-dim: #2a5f5a;
     --high: #f0655a;
     --medium: #e8b64c;
     --low: #6b93d6;
@@ -37,9 +34,7 @@
     font-family: var(--mono); font-size: 0.78rem; color: var(--accent);
     text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 0.9rem;
   }
-  .hero h1 {
-    font-size: 2.6rem; margin: 0 0 0.6rem; letter-spacing: -0.02em; font-weight: 700;
-  }
+  .hero h1 { font-size: 2.6rem; margin: 0 0 0.6rem; letter-spacing: -0.02em; font-weight: 700; }
   .hero .tagline { color: var(--muted); font-size: 1.05rem; margin: 0 0 1.6rem; max-width: 56ch; }
   .hero .philosophy {
     font-family: var(--mono); font-size: 0.88rem; color: #9aa5b3;
@@ -55,12 +50,33 @@
     font-size: 0.82rem; color: var(--text); background: var(--panel);
   }
   .check-pill svg { flex-shrink: 0; }
-  .check-pill.inferred { border-style: dashed; color: var(--muted); }
 
   main { max-width: 780px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
 
+  /* ---------- How it works ---------- */
+  .section-label {
+    font-family: var(--mono); font-size: 0.76rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em; margin: 2.6rem 0 1rem;
+  }
+  .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; margin-bottom: 0.5rem; }
+  @media (max-width: 640px) { .how-grid { grid-template-columns: 1fr; } }
+  .how-card {
+    border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.1rem 1.2rem;
+    background: var(--panel); position: relative; overflow: hidden;
+  }
+  .how-card .num {
+    font-family: var(--mono); font-size: 0.72rem; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 50%; width: 20px; height: 20px;
+    display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.7rem;
+  }
+  .how-card h3 { font-size: 0.92rem; margin: 0 0 0.4rem; font-weight: 600; }
+  .how-card p { font-size: 0.82rem; color: var(--muted); margin: 0; line-height: 1.5; }
+  .how-card .tag {
+    font-family: var(--mono); font-size: 0.68rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.6rem; display: block;
+  }
+
   /* ---------- Example output preview ---------- */
-  .preview-label { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 2.2rem 0 0.7rem; }
   .preview-card {
     border: 1px solid var(--border); border-left: 4px solid var(--high); border-radius: 8px;
     padding: 1rem 1.2rem; background: var(--panel); margin-bottom: 2.4rem;
@@ -79,7 +95,6 @@
   }
   label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
 
-  /* Examples row */
   .examples-label { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.6rem; }
   .examples-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.6rem; }
   .example-btn {
@@ -90,7 +105,6 @@
   .example-btn:hover { border-color: var(--accent); color: var(--accent); }
   .example-btn:disabled { opacity: 0.5; cursor: wait; }
 
-  /* Dropzones */
   .dropzone {
     border: 1.5px dashed var(--border); border-radius: 8px;
     padding: 1.6rem 1rem; text-align: center; cursor: pointer;
@@ -111,15 +125,15 @@
   input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
   .hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.35rem; }
 
-  details.advanced { margin-top: 0.4rem; }
-  details.advanced summary {
-    font-size: 0.8rem; color: var(--muted); cursor: pointer; user-select: none;
-    list-style: none;
+  #devPanel { display: none; margin-top: 0.4rem; }
+  #devPanel.visible { display: block; }
+  #devPanel summary {
+    font-size: 0.8rem; color: var(--muted); cursor: pointer; user-select: none; list-style: none;
   }
-  details.advanced summary::-webkit-details-marker { display: none; }
-  details.advanced summary::before { content: "▸ "; }
-  details.advanced[open] summary::before { content: "▾ "; }
-  details.advanced .advanced-body { margin-top: 0.8rem; }
+  #devPanel summary::-webkit-details-marker { display: none; }
+  #devPanel summary::before { content: "▸ "; }
+  #devPanel[open] summary::before { content: "▾ "; }
+  #devPanel .advanced-body { margin-top: 0.8rem; }
 
   button.run {
     margin-top: 1.5rem; background: var(--accent); color: #04211d; border: none;
@@ -174,20 +188,42 @@
 <body>
 
 <div class="hero">
-  <p class="kicker">ML pipeline auditor</p>
+  <p class="kicker">ML workflow auditor</p>
   <h1>PipelineGuardian</h1>
-  <p class="tagline">Finds ML bugs your linter can't see — data leakage, reproducibility gaps, and validation-strategy mismatches — with evidence, not a vibe.</p>
+  <p class="tagline">Finds ML bugs your linter can't see — data leakage, reproducibility gaps, and validation-strategy mismatches. Every issue includes supporting evidence.</p>
   <p class="philosophy"><span>AST</span> where rules are enough. <span>LLM</span> where context matters.</p>
 
   <div class="check-row">
     <span class="check-pill"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#4fd1c5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Data leakage</span>
     <span class="check-pill"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#4fd1c5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reproducibility</span>
-    <span class="check-pill inferred"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#7a8494" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Validation strategy (LLM, conditional)</span>
+    <span class="check-pill"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4.5" stroke="#4fd1c5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Validation strategy review</span>
   </div>
 </div>
 
 <main>
-  <p class="preview-label">Example output</p>
+  <p class="section-label">How it works</p>
+  <div class="how-grid">
+    <div class="how-card">
+      <span class="num">1</span>
+      <h3>Static analysis</h3>
+      <p>Parses your code's structure directly and checks it against known leakage and reproducibility patterns.</p>
+      <span class="tag">deterministic</span>
+    </div>
+    <div class="how-card">
+      <span class="num">2</span>
+      <h3>Schema inspection</h3>
+      <p>Looks at your actual dataset for timestamp columns, grouped entities, and class imbalance.</p>
+      <span class="tag">deterministic</span>
+    </div>
+    <div class="how-card">
+      <span class="num">3</span>
+      <h3>Contextual review</h3>
+      <p>An LLM weighs in only when a schema signal makes the split strategy worth reasoning about.</p>
+      <span class="tag">conditional</span>
+    </div>
+  </div>
+
+  <p class="section-label">Example output</p>
   <div class="preview-card">
     <div class="preview-top">
       <span class="badge high">high</span>
@@ -195,15 +231,15 @@
       <span class="check-name">scaler_fit_before_split</span>
     </div>
     <p class="msg">Scaler is fit on the full dataset before train_test_split — statistics from the test set leak into training.</p>
-    <p class="label" style="margin-top:0.6rem">evidence</p>
+    <p class="label" style="margin-top:0.6rem">Evidence</p>
     <code>scaler.fit_transform(X)</code>
   </div>
 
   <div class="panel">
     <p class="examples-label">Try an example — loads a real file from the repo, no upload needed</p>
     <div class="examples-row">
-      <button class="example-btn" data-file="01_scaler_leak.py">Leakage example</button>
-      <button class="example-btn" data-file="12_group_leak_random_split.py">Group leakage example</button>
+      <button class="example-btn" data-file="01_scaler_leak.py">Data leakage</button>
+      <button class="example-btn" data-file="12_group_leak_random_split.py">Group split issue</button>
       <button class="example-btn" data-file="10_all_clean_baseline.py">Clean notebook</button>
     </div>
 
@@ -225,15 +261,15 @@
       <input type="file" id="dataFile" accept=".csv">
     </div>
 
-    <label for="targetCol">Target column <span style="opacity:0.6">(optional, requires dataset)</span></label>
-    <input type="text" id="targetCol" placeholder="e.g. churn">
+    <label for="targetCol">Target column <span style="opacity:0.6">(optional)</span></label>
+    <input type="text" id="targetCol" placeholder="Used for imbalance detection, e.g. churn">
 
-    <details class="advanced">
-      <summary>Advanced</summary>
+    <details id="devPanel">
+      <summary>Advanced (local dev)</summary>
       <div class="advanced-body">
         <label for="apiUrl">API URL</label>
-        <input type="text" id="apiUrl" value="https://pipelineguardian-api.onrender.com">
-        <p class="hint">Defaults to the deployed backend — only change this for local testing.</p>
+        <input type="text" id="apiUrl" value="http://localhost:8000">
+        <p class="hint">Only visible on localhost — production always targets the deployed backend.</p>
       </div>
     </details>
 
@@ -249,7 +285,20 @@
 </footer>
 
 <script>
+const PROD_API_URL = 'https://pipelineguardian-api.onrender.com';
 const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/arushiiii18/pipelineguardian/main/eval/synthetic_notebooks/';
+
+const isLocal = ['localhost', '127.0.0.1', ''].includes(window.location.hostname) || window.location.protocol === 'file:';
+const devPanel = document.getElementById('devPanel');
+if (isLocal) devPanel.classList.add('visible');
+
+function getApiUrl() {
+  if (isLocal) {
+    const val = document.getElementById('apiUrl').value.trim().replace(/\/$/, '');
+    return val || PROD_API_URL;
+  }
+  return PROD_API_URL;
+}
 
 const sourceInput = document.getElementById('sourceFile');
 const dataInput = document.getElementById('dataFile');
@@ -261,14 +310,12 @@ const runBtn = document.getElementById('runBtn');
 const statusEl = document.getElementById('status');
 const resultsEl = document.getElementById('results');
 
-let loadedSourceFile = null; // File object, may come from disk or from a fetched example
+let loadedSourceFile = null;
 
-function setupDropzone(zone, input, nameEl, onFile) {
+function setupDropzone(zone, input, onFile) {
   zone.addEventListener('click', () => input.click());
   zone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') input.click(); });
-  input.addEventListener('change', () => {
-    if (input.files[0]) onFile(input.files[0]);
-  });
+  input.addEventListener('change', () => { if (input.files[0]) onFile(input.files[0]); });
   ['dragover', 'dragenter'].forEach(evt =>
     zone.addEventListener(evt, (e) => { e.preventDefault(); zone.classList.add('drag-over'); })
   );
@@ -281,11 +328,11 @@ function setupDropzone(zone, input, nameEl, onFile) {
   });
 }
 
-setupDropzone(dzSource, sourceInput, sourceFileName, (file) => {
+setupDropzone(dzSource, sourceInput, (file) => {
   loadedSourceFile = file;
   sourceFileName.textContent = file.name;
 });
-setupDropzone(dzData, dataInput, dataFileName, (file) => {
+setupDropzone(dzData, dataInput, (file) => {
   dataFileName.textContent = file.name;
 });
 
@@ -316,7 +363,7 @@ document.querySelectorAll('.example-btn').forEach(btn => {
 runBtn.addEventListener('click', async () => {
   const dataFile = dataInput.files[0];
   const targetCol = document.getElementById('targetCol').value.trim();
-  const apiUrl = document.getElementById('apiUrl').value.trim().replace(/\/$/, '');
+  const apiUrl = getApiUrl();
 
   if (!loadedSourceFile) {
     statusEl.textContent = 'Choose a .ipynb/.py file, drop one in, or try an example above.';
@@ -378,9 +425,9 @@ function renderReport(report) {
           <span class="check-name">${escapeHtml(issue.check_name)}${loc}</span>
         </div>
         <p>${escapeHtml(issue.message)}</p>
-        <p class="label">evidence</p>
+        <p class="label">Evidence</p>
         <code>${escapeHtml(issue.evidence)}</code>
-        <p class="label" style="margin-top:0.6rem">suggested fix</p>
+        <p class="label" style="margin-top:0.6rem">Suggested fix</p>
         <p>${escapeHtml(issue.suggested_fix)}</p>
       </div>`;
     });
