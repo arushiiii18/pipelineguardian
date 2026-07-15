@@ -4,184 +4,197 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PipelineGuardian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0e14;
+    --bg: #0a0f16;
     --panel: #10151d;
     --border: #232b38;
     --text: #d9dee6;
     --muted: #7a8494;
     --accent: #4fd1c5;
-    --high: #f0655a;
+    --high: #f87171;
     --medium: #e8b64c;
-    --low: #6b93d6;
-    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --low: #94a3b8;
+    --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     background: var(--bg);
-    background-image: radial-gradient(circle at 15% 0%, rgba(79,209,197,0.06), transparent 40%);
     color: var(--text);
     font-family: var(--sans);
-    line-height: 1.55;
+    line-height: 1.5;
   }
 
   /* ---------- Hero ---------- */
-  .hero { max-width: 780px; margin: 0 auto; padding: 3.5rem 1.5rem 1.5rem; }
+  .hero { max-width: 780px; margin: 0 auto; padding: 1.5rem 1.5rem 0.8rem; border-bottom: 1px solid var(--border); }
   .hero .kicker {
-    font-family: var(--mono); font-size: 0.78rem; color: var(--accent);
-    text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 0.9rem;
+    font-family: var(--mono); font-size: 0.74rem; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 0.5rem;
   }
-  .hero h1 { font-size: 2.6rem; margin: 0 0 0.6rem; letter-spacing: -0.02em; font-weight: 700; }
-  .hero .tagline { color: var(--muted); font-size: 1.05rem; margin: 0 0 1.6rem; max-width: 56ch; }
+  .hero h1 { font-size: 1.9rem; margin: 0 0 0.4rem; letter-spacing: -0.01em; font-weight: 700; }
+  .hero .tagline { color: var(--muted); font-size: 0.98rem; margin: 0 0 1rem; max-width: 58ch; }
   .hero .philosophy {
-    font-family: var(--mono); font-size: 0.88rem; color: #9aa5b3;
-    border-left: 2px solid var(--accent); padding-left: 0.9rem; margin: 0 0 1.8rem;
+    font-family: var(--mono); font-size: 0.82rem; color: #9aa5b3;
+    border-left: 2px solid var(--accent); padding-left: 0.8rem; margin: 0 0 1.2rem;
   }
   .hero .philosophy span { color: var(--accent); }
 
-  .check-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.5rem; }
+  .check-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.2rem; }
   .check-pill {
-    display: inline-flex; align-items: center; gap: 0.45rem;
-    border: 1px solid var(--border); border-radius: 20px;
-    padding: 0.4rem 0.9rem 0.4rem 0.7rem;
-    font-size: 0.82rem; color: var(--text); background: var(--panel);
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 0.32rem 0.75rem 0.32rem 0.6rem;
+    font-size: 0.78rem; color: var(--text); background: var(--panel);
   }
   .check-pill svg { flex-shrink: 0; }
 
-  main { max-width: 780px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
+  main { max-width: 780px; margin: 0 auto; padding: 0.5rem 1.5rem 4rem; }
 
   /* ---------- How it works ---------- */
   .section-label {
-    font-family: var(--mono); font-size: 0.76rem; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.08em; margin: 2.6rem 0 1rem;
+    font-family: var(--mono); font-size: 0.72rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin: 1.4rem 0 0.7rem;
   }
-  .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; margin-bottom: 0.5rem; }
+  .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; margin-bottom: 0.4rem; }
   @media (max-width: 640px) { .how-grid { grid-template-columns: 1fr; } }
   .how-card {
-    border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.1rem 1.2rem;
+    border: 1px solid var(--border); border-radius: 6px; padding: 0.9rem 0.95rem 1rem;
     background: var(--panel); position: relative; overflow: hidden;
   }
   .how-card .num {
-    font-family: var(--mono); font-size: 0.72rem; color: var(--accent);
-    border: 1px solid var(--accent); border-radius: 50%; width: 20px; height: 20px;
-    display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.7rem;
+    font-family: var(--mono); font-size: 0.7rem; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 3px; width: 18px; height: 18px;
+    display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.55rem;
   }
-  .how-card h3 { font-size: 0.92rem; margin: 0 0 0.4rem; font-weight: 600; }
-  .how-card p { font-size: 0.82rem; color: var(--muted); margin: 0; line-height: 1.5; }
+  .how-card h3 { font-size: 0.88rem; margin: 0 0 0.3rem; font-weight: 600; }
+  .how-card p { font-size: 0.8rem; color: var(--muted); margin: 0; line-height: 1.45; }
   .how-card .tag {
-    font-family: var(--mono); font-size: 0.68rem; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.6rem; display: block;
+    font-family: var(--mono); font-size: 0.66rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.5rem; display: block;
   }
 
   /* ---------- Example output preview ---------- */
   .preview-card {
-    border: 1px solid var(--border); border-left: 4px solid var(--high); border-radius: 8px;
-    padding: 1rem 1.2rem; background: var(--panel); margin-bottom: 2.4rem;
+    border: 1px solid var(--border); border-left: 3px solid var(--high); border-radius: 4px;
+    padding: 0.85rem 1rem; background: var(--panel); margin-bottom: 1.8rem;
   }
-  .preview-top { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
-  .preview-card .msg { font-size: 0.92rem; margin: 0.3rem 0; }
+  .preview-top { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.45rem; }
+  .preview-card .msg { font-size: 0.88rem; margin: 0.3rem 0; }
   .preview-card code {
-    font-family: var(--mono); font-size: 0.82rem; background: var(--bg);
-    padding: 0.15rem 0.4rem; border-radius: 4px; display: inline-block;
+    font-family: var(--mono); font-size: 0.8rem; background: var(--bg);
+    padding: 0.15rem 0.4rem; border-radius: 3px; display: inline-block;
   }
 
   /* ---------- Panel / form ---------- */
   .panel {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
-    padding: 1.6rem; margin-bottom: 1.4rem;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 1.3rem; margin-bottom: 1.2rem;
   }
-  label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+  label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; }
 
-  .examples-label { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.6rem; }
-  .examples-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.6rem; }
+  .examples-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .examples-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.3rem; }
   .example-btn {
-    font-family: var(--mono); font-size: 0.78rem; background: transparent;
-    border: 1px solid var(--border); color: var(--text); border-radius: 6px;
-    padding: 0.45rem 0.8rem; cursor: pointer; transition: border-color 0.15s, color 0.15s;
+    font-family: var(--mono); font-size: 0.76rem; background: transparent;
+    border: 1px solid var(--border); color: var(--text); border-radius: 4px;
+    padding: 0.4rem 0.75rem; cursor: pointer; transition: border-color 0.15s, color 0.15s;
   }
   .example-btn:hover { border-color: var(--accent); color: var(--accent); }
   .example-btn:disabled { opacity: 0.5; cursor: wait; }
 
   .dropzone {
-    border: 1.5px dashed var(--border); border-radius: 8px;
-    padding: 1.6rem 1rem; text-align: center; cursor: pointer;
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 0.9rem 1rem; text-align: left; cursor: pointer;
     transition: border-color 0.15s, background 0.15s;
-    margin-bottom: 1.1rem;
+    margin-bottom: 0.9rem;
+    display: flex; align-items: center; gap: 0.7rem;
   }
-  .dropzone:hover, .dropzone.drag-over { border-color: var(--accent); background: rgba(79,209,197,0.04); }
-  .dropzone svg { opacity: 0.6; margin-bottom: 0.5rem; }
-  .dropzone .dz-title { font-size: 0.9rem; color: var(--text); margin-bottom: 0.2rem; }
-  .dropzone .dz-sub { font-size: 0.78rem; color: var(--muted); }
-  .dropzone .dz-filename { font-family: var(--mono); font-size: 0.82rem; color: var(--accent); margin-top: 0.4rem; }
+  .dropzone:hover, .dropzone.drag-over { border-color: var(--accent); }
+  .dropzone svg { opacity: 0.55; flex-shrink: 0; }
+  .dropzone .dz-text { flex: 1; min-width: 0; }
+  .dropzone .dz-title { font-size: 0.85rem; color: var(--text); }
+  .dropzone .dz-sub { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+  .dropzone .dz-filename { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); margin-top: 0.25rem; }
   .dropzone input[type="file"] { display: none; }
 
   input[type="text"] {
     width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
-    border-radius: 6px; padding: 0.6rem 0.7rem; font-size: 0.88rem; font-family: inherit;
+    border-radius: 4px; padding: 0.55rem 0.65rem; font-size: 0.86rem; font-family: inherit;
   }
   input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.35rem; }
+  .hint { font-size: 0.76rem; color: var(--muted); margin-top: 0.3rem; }
 
   #devPanel { display: none; margin-top: 0.4rem; }
   #devPanel.visible { display: block; }
   #devPanel summary {
-    font-size: 0.8rem; color: var(--muted); cursor: pointer; user-select: none; list-style: none;
+    font-size: 0.78rem; color: var(--muted); cursor: pointer; user-select: none; list-style: none;
   }
   #devPanel summary::-webkit-details-marker { display: none; }
   #devPanel summary::before { content: "▸ "; }
   #devPanel[open] summary::before { content: "▾ "; }
-  #devPanel .advanced-body { margin-top: 0.8rem; }
+  #devPanel .advanced-body { margin-top: 0.7rem; }
 
   button.run {
-    margin-top: 1.5rem; background: var(--accent); color: #04211d; border: none;
-    border-radius: 6px; padding: 0.7rem 1.4rem; font-weight: 700; font-size: 0.92rem;
+    margin-top: 1.2rem; background: var(--accent); color: #04211d; border: none;
+    border-radius: 4px; padding: 0.62rem 1.25rem; font-weight: 700; font-size: 0.88rem;
     cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--sans);
   }
   button.run:disabled { opacity: 0.5; cursor: not-allowed; }
   button.run:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 
-  #status { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); margin-top: 1rem; }
+  #status { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); margin-top: 0.9rem; }
   .spinner {
-    display: inline-block; width: 12px; height: 12px; border: 2px solid var(--border);
+    display: inline-block; width: 11px; height: 11px; border: 2px solid var(--border);
     border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite;
     vertical-align: -2px; margin-right: 0.4rem;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* ---------- Results ---------- */
-  .tools-line { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); margin-bottom: 1rem; }
-  .summary { display: flex; gap: 1.5rem; margin-bottom: 1.2rem; font-family: var(--mono); font-size: 0.85rem; }
-  .summary span.n { font-size: 1.3rem; display: block; }
+  .tools-line { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); margin-bottom: 0.9rem; }
+  .summary { display: flex; gap: 1.4rem; margin-bottom: 1.1rem; font-family: var(--mono); font-size: 0.82rem; }
+  .summary span.n { font-size: 1.2rem; display: block; }
 
   .issue {
-    border: 1px solid var(--border); border-left-width: 4px; border-radius: 8px;
-    padding: 1rem 1.1rem; margin-bottom: 0.9rem; background: var(--panel);
+    border: 1px solid var(--border); border-left-width: 3px; border-radius: 4px;
+    padding: 0.9rem 1rem; margin-bottom: 0.8rem; background: var(--panel);
   }
   .issue.high { border-left-color: var(--high); }
   .issue.medium { border-left-color: var(--medium); }
   .issue.low { border-left-color: var(--low); }
-  .issue-top { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .issue-top { display: flex; align-items: baseline; gap: 0.55rem; margin-bottom: 0.45rem; flex-wrap: wrap; }
   .badge {
-    font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase;
-    padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 700;
+    font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase;
+    padding: 0.15rem 0.45rem; border-radius: 3px; font-weight: 600;
   }
-  .badge.high { background: rgba(240,101,90,0.15); color: var(--high); }
+  .badge.high { background: rgba(248,113,113,0.15); color: var(--high); }
   .badge.medium { background: rgba(232,182,76,0.15); color: var(--medium); }
-  .badge.low { background: rgba(107,147,214,0.15); color: var(--low); }
-  .badge.confidence { background: rgba(122,132,148,0.15); color: var(--muted); }
-  .check-name { font-family: var(--mono); font-size: 0.88rem; color: var(--text); }
-  .issue p { margin: 0.35rem 0; font-size: 0.9rem; }
-  .issue .label { color: var(--muted); font-size: 0.78rem; }
-  .issue code {
-    font-family: var(--mono); font-size: 0.82rem; background: var(--bg);
-    padding: 0.1rem 0.35rem; border-radius: 4px; display: inline-block; margin-top: 0.15rem;
-  }
-  .empty { color: var(--muted); font-family: var(--mono); font-size: 0.9rem; text-align: center; padding: 2rem 0; }
+  .badge.low { background: rgba(148,163,184,0.15); color: var(--low); }
+  .badge.deterministic {
+    background: rgba(79,209,197,0.15);
+    color: var(--accent);
+}
 
-  footer { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 3rem; color: var(--muted); font-size: 0.78rem; font-family: var(--mono); }
+.badge.inferred {
+    background: rgba(168,85,247,0.15);
+    color: #c084fc;
+}
+  .check-name { font-family: var(--mono); font-size: 0.85rem; color: var(--text); }
+  .issue p { margin: 0.32rem 0; font-size: 0.88rem; }
+  .issue .label { color: var(--muted); font-size: 0.76rem; }
+  .issue code {
+    font-family: var(--mono); font-size: 0.8rem; background: var(--bg);
+    padding: 0.1rem 0.35rem; border-radius: 3px; display: inline-block; margin-top: 0.15rem;
+  }
+  .empty { color: var(--muted); font-family: var(--mono); font-size: 0.88rem; text-align: center; padding: 1.8rem 0; }
+
+  footer { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 3rem; color: var(--muted); font-size: 0.76rem; font-family: var(--mono); }
   footer a { color: var(--muted); }
 </style>
 </head>
@@ -212,18 +225,18 @@
     <div class="how-card">
       <span class="num">2</span>
       <h3>Schema inspection</h3>
-      <p>Looks at your actual dataset for timestamp columns, grouped entities, and class imbalance.</p>
+      <p>Looks at your dataset for timestamp columns, grouped entities, and class imbalance.</p>
       <span class="tag">deterministic</span>
     </div>
     <div class="how-card">
       <span class="num">3</span>
       <h3>Contextual review</h3>
-      <p>An LLM weighs in only when a schema signal makes the split strategy worth reasoning about.</p>
+      <p>Uses LLM reasoning only when schema signals introduce context that rules alone can't resolve.</p>
       <span class="tag">conditional</span>
     </div>
   </div>
 
-  <p class="section-label">Example output</p>
+  <p class="section-label">Sample findings</p>
   <div class="preview-card">
     <div class="preview-top">
       <span class="badge high">high</span>
@@ -231,7 +244,7 @@
       <span class="check-name">scaler_fit_before_split</span>
     </div>
     <p class="msg">Scaler is fit on the full dataset before train_test_split — statistics from the test set leak into training.</p>
-    <p class="label" style="margin-top:0.6rem">Evidence</p>
+    <p class="label" style="margin-top:0.55rem">Evidence</p>
     <code>scaler.fit_transform(X)</code>
   </div>
 
@@ -245,24 +258,28 @@
 
     <label>Notebook or script</label>
     <div class="dropzone" id="dzSource" tabindex="0">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#7a8494" stroke-width="1.5"/><path d="M14 2v6h6" stroke="#7a8494" stroke-width="1.5"/></svg>
-      <div class="dz-title">Drop notebook or script here, or click to browse</div>
-      <div class="dz-sub">.ipynb or .py</div>
-      <div class="dz-filename" id="sourceFileName"></div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#7a8494" stroke-width="1.5"/><path d="M14 2v6h6" stroke="#7a8494" stroke-width="1.5"/></svg>
+      <div class="dz-text">
+        <div class="dz-title">Drop notebook or script here, or click to browse</div>
+        <div class="dz-sub">.ipynb / .py</div>
+        <div class="dz-filename" id="sourceFileName"></div>
+      </div>
       <input type="file" id="sourceFile" accept=".ipynb,.py">
     </div>
 
     <label>Dataset CSV <span style="opacity:0.6">(optional)</span></label>
     <div class="dropzone" id="dzData" tabindex="0">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#7a8494" stroke-width="1.5"/><path d="M3 9h18M9 9v11" stroke="#7a8494" stroke-width="1.5"/></svg>
-      <div class="dz-title">Drop a CSV here to enable schema checks</div>
-      <div class="dz-sub">Timestamp / group / imbalance detection</div>
-      <div class="dz-filename" id="dataFileName"></div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#7a8494" stroke-width="1.5"/><path d="M3 9h18M9 9v11" stroke="#7a8494" stroke-width="1.5"/></svg>
+      <div class="dz-text">
+        <div class="dz-title">Drop a CSV here to enable schema checks</div>
+        <div class="dz-sub">timestamp / group / imbalance detection</div>
+        <div class="dz-filename" id="dataFileName"></div>
+      </div>
       <input type="file" id="dataFile" accept=".csv">
     </div>
 
     <label for="targetCol">Target column <span style="opacity:0.6">(optional)</span></label>
-    <input type="text" id="targetCol" placeholder="Used for imbalance detection, e.g. churn">
+    <input type="text" id="targetCol" placeholder="Used for target-aware validation checks (e.g. churn)">
 
     <details id="devPanel">
       <summary>Advanced (local dev)</summary>
@@ -281,7 +298,7 @@
 </main>
 
 <footer>
-  <a href="https://github.com/arushiiii18/pipelineguardian" target="_blank">source on GitHub</a> · free-tier backend, first request after idle may take 30-50s
+  <a href="https://github.com/arushiiii18/pipelineguardian" target="_blank">GitHub</a>· v1.0.0 · free-tier backend, first request after idle may take 30-50s
 </footer>
 
 <script>
@@ -413,7 +430,9 @@ function renderReport(report) {
   </div>`;
 
   if (issues.length === 0) {
-    html += `<div class="panel empty">No issues found.</div>`;
+    html += `<div class="panel empty">No issues found.
+
+No leakage patterns, reproducibility gaps or validation mismatches were detected in the current audit scope.</div>`;
   } else {
     issues.sort((a, b) => ({high:0,medium:1,low:2}[a.severity] - {high:0,medium:1,low:2}[b.severity]));
     issues.forEach(issue => {
