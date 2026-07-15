@@ -1,88 +1,271 @@
 # PipelineGuardian
 
-Most ML bugs aren't syntax errors. They're things like fitting a scaler before the train-test split, using a random split on timestamped data, or forgetting to seed experiments that are supposed to be reproducible. Traditional linters don't know anything about ML workflows, and most notebook environments won't warn you when you've introduced one of these.
+Most ML bugs aren't syntax errors.
 
-This started as a simple leakage detector and gradually became an experiment in figuring out where deterministic tooling stops being enough and where LLM reasoning actually starts to help.
+They're things like fitting a scaler before a train-test split, using a random split on timestamped data, leaking grouped entities across folds, or forgetting to seed experiments that are supposed to be reproducible.
 
-PipelineGuardian audits `.ipynb` notebooks and `.py` scripts using mostly deterministic checks, plus one narrow, targeted LLM call for the part that genuinely needs judgment rather than pattern-matching.
+Traditional linters don't understand ML workflows, and notebooks rarely warn you when you've accidentally introduced one of these problems.
+
+PipelineGuardian is an ML workflow auditor for `.ipynb` notebooks and `.py` scripts that combines deterministic static analysis with one narrowly scoped LLM judgment step for cases where context genuinely matters.
+
+The goal wasn't to build another "AI code reviewer." It was to explore where deterministic tooling stops being enough and where reasoning actually becomes necessary.
 
 ---
 
 ## What it checks
 
-**Leakage Detector** *(deterministic, AST-based)* — scaler/encoder fit before `train_test_split`, dataset-wide statistics computed pre-split and reused, target column left in an explicit feature list.
+### Leakage Detector *(deterministic, AST-based)*
 
-**Reproducibility Checker** *(deterministic)* — missing `random_state`, unseeded NumPy/PyTorch randomness, missing or unpinned dependencies.
+Detects common leakage patterns including:
 
-**Schema Inspector** *(deterministic)* — flags timestamp columns, group/ID columns, and target imbalance. Doesn't raise issues itself, just hands context to the next step.
+- `StandardScaler`, encoders, or transformers fitted before `train_test_split`
+- Dataset-wide statistics computed before splitting and reused later
+- Target columns accidentally included in explicit feature lists
 
-**Validation Strategy Reviewer** *(LLM, Groq / `llama-3.3-70b-versatile` via LangChain)* — only runs when Schema Inspector finds something worth reasoning about. Judges whether the split strategy already in the code accounts for that signal, and explains why.
+---
 
-## Why an LLM at all?
+### Reproducibility Checker *(deterministic)*
 
-Most of this project deliberately avoids one. Leakage and reproducibility checks are deterministic problems, handled with static analysis. The LLM only enters when there's genuine context to weigh:
+Flags issues such as:
 
-> A random split on timestamped sales data is probably wrong — but a random split on a churn dataset that happens to have a timestamp column might be fine.
+- Missing `random_state`
+- Unseeded NumPy or PyTorch randomness
+- Missing or unpinned dependencies
 
-That distinction needs judgment, not a rule. This was the most interesting part of building it: **where deterministic analysis stops being enough and where LLM reasoning actually becomes useful.**
+---
 
-The decision to *call* the LLM is still a plain `if` statement based on Schema Inspector's output — the signals are objective. What the model actually does is the one real judgment call in the pipeline.
+### Schema Inspector *(deterministic)*
 
-## Non-goals
+Extracts contextual signals from datasets, including:
 
-No composite quality score — every issue stands on its own evidence. No claim to catch all leakage — a few specific patterns, listed above. No code style/PEP8 review. No cross-notebook experiment history.
+- Timestamp columns
+- Group or entity identifiers
+- Target imbalance
+
+The inspector itself does not raise findings — it only provides context for downstream reasoning.
+
+---
+
+### Validation Strategy Reviewer *(conditional LLM reasoning)*
+
+Runs only when schema signals introduce ambiguity that static rules alone cannot resolve.
+
+Examples:
+
+- A random split on timestamped sales data is probably incorrect.
+- A churn dataset that merely contains a timestamp column may still be perfectly fine with a random split.
+
+The difference requires judgment rather than pattern matching.
+
+PipelineGuardian uses `llama-3.3-70b-versatile` through Groq and LangChain for this single task only.
+
+---
+
+## Why use an LLM at all?
+
+Most of PipelineGuardian deliberately avoids one.
+
+Leakage detection and reproducibility checks are deterministic problems and are handled through static analysis.
+
+The LLM only participates when contextual reasoning becomes unavoidable.
+
+Importantly, the decision to invoke the model is itself deterministic:
+
+```python
+if schema_contains_contextual_signal:
+    run_validation_review()
+```
+
+The schema signals are objective.
+
+The judgment about whether the existing validation strategy already accounts for those signals is the only part delegated to the model.
+
+---
+
+## Architecture
+
+```text
+Notebook / Script
+        │
+        ▼
+ AST Parser
+        │
+        ▼
+ Leakage Detector
+        │
+        ▼
+ Reproducibility Checker
+        │
+        ▼
+ Schema Inspector
+        │
+        ├── No contextual signal → finish
+        │
+        ▼
+ Validation Strategy Reviewer (LLM)
+        │
+        ▼
+ Typed Findings
+```
+
+---
 
 ## Output
 
-Every finding is a typed object (`check_name`, `severity`, `confidence`, `evidence`, `suggested_fix`, plus line/cell location). `confidence` is either `deterministic` (exact match) or `inferred` (LLM judgment — currently only the validation-strategy check uses this).
+Every finding is returned as a typed object containing:
+
+- `check_name`
+- `severity`
+- `confidence_source`
+- `evidence`
+- `suggested_fix`
+- `line_number` or `cell_number`
+
+Confidence is intentionally simple:
+
+- `deterministic` → exact rule match
+- `inferred` → contextual LLM judgment
+
+---
 
 ## Evaluation
 
+Deterministic checks were validated against synthetic fixtures covering every supported failure mode.
+
 ```bash
-python -m eval.eval                        # deterministic checks: precision 1.00, recall 1.00, F1 1.00
-python -m eval.validation_strategy_demo     # LLM tool, evaluated qualitatively
-python -m eval.demo_before_after            # before: 5 issues → after: 0 issues
+python -m eval.eval
 ```
 
-The perfect deterministic score is on 12 synthetic fixtures built to test these specific checks — it shows the pipeline works correctly, not that it generalizes to arbitrary real-world notebooks. The LLM tool is scored separately and qualitatively (reasoning printed, not reduced to a number), including a true-negative case — timestamp column present, split already correct — to check it isn't just flagging any date column on sight.
-
-## Using it
+Validation strategy review is evaluated separately through representative scenarios rather than aggregate metrics:
 
 ```bash
-# CLI — works standalone, no backend needed
+python -m eval.validation_strategy_demo
+```
+
+Example scenarios include:
+
+- Timestamp column + random split → flagged
+- Timestamp column + temporal split → accepted
+- Timestamp column present but irrelevant → accepted
+- Grouped entities + random split → flagged
+
+The goal was not to maximize benchmark numbers but to ensure every supported check behaves as intended.
+
+---
+
+## Usage
+
+### CLI
+
+```bash
 python -m pipelineguardian.cli audit notebook.ipynb
-python -m pipelineguardian.cli audit script.py --data data.csv --target churn --json
 
-# API
-uvicorn pipelineguardian.api:app --reload
-
-# Frontend — plain HTML/JS, talks to the API directly
+python -m pipelineguardian.cli audit script.py \
+    --data data.csv \
+    --target churn \
+    --json
 ```
 
-CLI exits `1` on any high-severity issue, `0` otherwise — usable as a CI gate.
+CLI exits with:
+
+- `0` → no high-severity findings
+- `1` → one or more high-severity findings
+
+making it usable as a CI gate.
+
+---
+
+### API
+
+```bash
+uvicorn pipelineguardian.api:app --reload
+```
+
+---
+
+### Frontend
+
+The frontend is intentionally minimal and communicates directly with the FastAPI backend.
+
+---
 
 ## Stack
 
-LangChain, Groq (`llama-3.3-70b-versatile`), Python AST, Pandas, Pydantic, FastAPI, Pytest, nbformat.
+- Python AST
+- FastAPI
+- Pydantic
+- Pandas
+- nbformat
+- Pytest
+- LangChain
+- Groq
+- `llama-3.3-70b-versatile`
 
-**Why Groq?** Free tier meant no billing setup during development. The judgment task is narrow enough that the open-weight model holds up well — checked against real cases, not assumed. Swapping to OpenAI is a one-line change given LangChain's shared interface.
+---
+
+## Limitations
+
+PipelineGuardian intentionally keeps its scope narrow.
+
+Current limitations include:
+
+- Focuses on a small set of well-defined leakage patterns
+- Assumes sklearn-style workflows
+- Does not execute code
+- Does not inspect imported helper functions
+- Does not track experiment history across notebooks
+
+Every supported check is designed to be explainable, evidence-backed, and defensible.
+
+---
 
 ## Setup
 
 ```bash
-python -m venv venv && source venv/bin/activate   # venv\Scripts\Activate.ps1 on Windows
+python -m venv venv
+source venv/bin/activate
+
+# Windows
+venv\Scripts\Activate.ps1
+
 pip install -r requirements.txt
-cp .env.example .env   # add your GROQ_API_KEY — free at console.groq.com
-python -m pytest tests/ -v
+
+cp .env.example .env
+# Add your GROQ_API_KEY
+
+pytest tests/ -v
 ```
 
-## Live demo
+---
 
-Frontend: https://pipelineguardian-eight.vercel.app
-Backend: https://pipelineguardian-api.onrender.com *(free tier — first request after idle takes ~30-50s to wake up)*
+## Live Demo
 
-Try it with anything in `eval/synthetic_notebooks/` — `01_scaler_leak.py`, `07_missing_random_state.py`, `12_group_leak_random_split.py` for individual checks, or `demo_before.ipynb` / `demo_after.ipynb` for the full picture.
+Frontend:
 
-## What's next
+https://pipelineguardian-eight.vercel.app/
 
-Additional leakage patterns, experiment-tracking integration, richer validation-strategy checks, CI/CD integration for repo audits. Kept the scope narrow enough for now that every check here can be explained and defended.
+Backend:
+
+https://pipelineguardian-api.onrender.com/
+
+> The backend runs on Render's free tier and may take 30-50 seconds to wake up after inactivity.
+
+Try it with the examples inside `eval/synthetic_notebooks/`:
+
+- `01_scaler_leak.py`
+- `07_missing_random_state.py`
+- `12_group_leak_random_split.py`
+- `demo_before.ipynb`
+- `demo_after.ipynb`
+
+---
+
+## Future Work
+
+- Additional leakage patterns
+- Richer validation strategy checks
+- Experiment tracking integration
+- CI/CD and pull request integration
+- Repository-wide auditing
+
+The scope was intentionally kept narrow enough that every result produced by the system can be explained and defended.
