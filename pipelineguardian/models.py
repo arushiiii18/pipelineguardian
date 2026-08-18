@@ -1,7 +1,7 @@
 """
 Shared data model for PipelineGuardian.
 
-Every tool — deterministic or LLM-backed — emits Issue objects in this shape.
+Every tool be it deterministic or LLM-backed, emits Issue objects in this shape.
 There is deliberately no composite "quality score" field anywhere in this file.
 See README.md, "Non-goals", for why.
 """
