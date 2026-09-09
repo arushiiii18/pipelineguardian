@@ -14,7 +14,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class Severity(str, Enum):
     HIGH = "high"       # will silently corrupt results (e.g. leakage)
     MEDIUM = "medium"   # will hurt reproducibility / trust in results
-    LOW = "low"          # worth knowing, low blast radius
+    LOW = "low"          # low blast radius
 
 
 class Confidence(str, Enum):

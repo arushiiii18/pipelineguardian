@@ -62,7 +62,7 @@ def check_scaler_fit_before_split(tree, pset) -> list[Issue]:
     issues = []
     split_line = _find_split_line(tree)
     if split_line is None:
-        return issues  # no split call found — order can't be judged, don't guess
+        return issues  # no split call found — order can't be judged
 
     tracked_vars = _track_fit_class_vars(tree)
 

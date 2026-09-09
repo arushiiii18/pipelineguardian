@@ -14,7 +14,7 @@ import nbformat
 
 @dataclass
 class ParsedSource:
-    source: str                 # flattened python source, one file's worth
+    source: str                 # flattened python source
     path: str
     is_notebook: bool
     line_to_cell: dict[int, int]  # 1-indexed source line -> 0-indexed cell number

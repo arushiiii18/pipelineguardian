@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 .pytest_cache/
 *.egg-info/
+# Yang et al. evaluation corpus
+eval/yang_corpus/notebooks/
