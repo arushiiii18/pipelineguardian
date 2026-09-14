@@ -1,8 +1,8 @@
 """
 eval.py — real, runnable evaluation against eval/synthetic_notebooks.
 
-Scope: this scores leakage_detector + reproducibility_checker only, since
-those are deterministic and their ground truth is unambiguous. The LLM tool
+Scope: this scores leakage_detector + reproducibility_checker + overlap_detector +
+multitest_detector — all deterministic detectors. The LLM tool
 (validation_strategy_reviewer) is intentionally NOT scored here — a
 precision/recall number for a non-deterministic LLM judgment, computed
 against a handful of hand-labeled cases, would be exactly the kind of
@@ -10,15 +10,21 @@ unfalsifiable-sounding metric the project's non-goals rule out. That tool's
 behavior is instead demonstrated qualitatively via the before/after demo
 pair (see README).
 
+Note: overlap_detector Check B (group_unaware_split) requires a DataFrame
+argument and is not exercised here — it is covered by test_overlap_detector.py.
+Fixtures 17 and 18 therefore expect [] in expected.json for this scorer.
+
 Run: python -m eval.eval
 """
 
+import ast
 import json
 import os
 from collections import Counter
 
 from pipelineguardian.tools.notebook_parser import load_source
 from pipelineguardian.tools import leakage_detector, reproducibility_checker
+from pipelineguardian.tools import overlap_detector, multitest_detector
 
 HERE = os.path.dirname(__file__)
 FIXTURES_DIR = os.path.join(HERE, "synthetic_notebooks")
@@ -28,7 +34,13 @@ RESULTS_PATH = os.path.join(HERE, "results.md")
 
 def run_detectors(path: str) -> list[str]:
     pset = load_source(path)
-    issues = leakage_detector.run(pset) + reproducibility_checker.run(pset)
+    tree = ast.parse(pset.source)
+    issues = (
+        leakage_detector.run(pset)
+        + reproducibility_checker.run(pset)
+        + overlap_detector.run(tree, pset)          # Check A only (no df/signals)
+        + multitest_detector.run(tree, pset)
+    )
     return [i.check_name for i in issues]
 
 

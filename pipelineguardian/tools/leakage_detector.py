@@ -15,7 +15,7 @@ number, which is valid because notebook_parser.py flattens cells in
 """
 
 import ast
-from pipelineguardian.models import Issue, Severity, Confidence
+from pipelineguardian.models import Issue, Severity, Confidence, Category, IssueSource
 
 FIT_CLASSES = {
     "StandardScaler", "MinMaxScaler", "RobustScaler", "Normalizer",
@@ -81,6 +81,8 @@ def check_scaler_fit_before_split(tree, pset) -> list[Issue]:
         if node.lineno < split_line:
             issues.append(Issue(
                 check_name="scaler_fit_before_split",
+                category=Category.PREPROCESSING,
+                source=IssueSource.RULE,
                 severity=Severity.HIGH,
                 confidence=Confidence.DETERMINISTIC,
                 message=f"'{base.id}.{node.func.attr}()' is called on line {node.lineno}, "
@@ -115,6 +117,8 @@ def check_fillna_uses_full_dataset_stat(tree, pset) -> list[Issue]:
             continue  # happens after split — not necessarily leakage, skip
         issues.append(Issue(
             check_name="fillna_uses_full_dataset_stat",
+            category=Category.PREPROCESSING,
+            source=IssueSource.RULE,
             severity=Severity.HIGH,
             confidence=Confidence.DETERMINISTIC,
             message=f"fillna() on line {node.lineno} imputes using a statistic "
@@ -162,6 +166,8 @@ def check_target_column_in_feature_list(tree, pset) -> list[Issue]:
             if target_col in col_names:
                 issues.append(Issue(
                     check_name="target_column_in_feature_list",
+                    category=Category.OTHER,
+                    source=IssueSource.RULE,
                     severity=Severity.HIGH,
                     confidence=Confidence.DETERMINISTIC,
                     message=f"Target column '{target_col}' (used to build y) also appears "

@@ -19,11 +19,29 @@ class Severity(str, Enum):
 
 class Confidence(str, Enum):
     DETERMINISTIC = "deterministic"  # exact AST/regex pattern match, no ambiguity
-    INFERRED = "inferred"            # LLM judgment call (validation_strategy_reviewer only)
+    INFERRED = "inferred"            # LLM judgment call
+
+
+class Category(str, Enum):
+    PREPROCESSING = "preprocessing"
+    OVERLAP = "overlap"
+    MULTI_TEST = "multi_test"
+    REPRODUCIBILITY = "reproducibility"
+    VALIDATION_STRATEGY = "validation_strategy"
+    OTHER = "other"
+
+
+class IssueSource(str, Enum):
+    RULE = "rule"
+    LLM_ONLY = "llm_only"
+    LLM_CONTEXT = "llm_context"
+    HYBRID = "hybrid"
 
 
 class Issue(BaseModel):
     check_name: str = Field(..., description="Machine-readable id, e.g. 'scaler_fit_before_split'")
+    category: Optional[Category] = Field(None, description="Which leakage/reproducibility category this belongs to")
+    source: Optional[IssueSource] = Field(None, description="Which condition pipeline produced this finding")
     severity: Severity
     confidence: Confidence
     message: str = Field(..., description="Human-readable one-line explanation")
