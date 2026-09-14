@@ -1,1 +1,8 @@
  
+{"timestamp": "2026-09-14T10:43:54.481387+00:00", "notebook": "2021-09-05-nb_1244.ipynb", "condition": "llm_only", "run_index": 0, "latency_s": 3.78}
+{"timestamp": "2026-09-14T10:44:14.095411+00:00", "notebook": "2021-09-05-nb_1244.ipynb", "condition": "llm_only", "run_index": 1, "latency_s": 19.604}
+{"timestamp": "2026-09-14T10:44:38.106899+00:00", "notebook": "2021-09-05-nb_1244.ipynb", "condition": "llm_only", "run_index": 2, "latency_s": 24.011}
+{"timestamp": "2026-09-14T10:45:17.592433+00:00", "notebook": "2021-09-07-nb_949.ipynb", "condition": "llm_only", "run_index": 0, "latency_s": 39.484}
+{"timestamp": "2026-09-14T10:46:14.012384+00:00", "notebook": "2021-09-07-nb_949.ipynb", "condition": "llm_only", "run_index": 1, "latency_s": 56.418}
+{"timestamp": "2026-09-14T10:47:05.248859+00:00", "notebook": "2021-09-07-nb_949.ipynb", "condition": "llm_only", "run_index": 2, "latency_s": 51.236}
+{"timestamp": "2026-09-14T10:47:55.041333+00:00", "notebook": "2021-09-09-nb_498.ipynb", "condition": "llm_only", "run_index": 0, "latency_s": 49.792}

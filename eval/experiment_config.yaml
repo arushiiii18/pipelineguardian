@@ -1,10 +1,13 @@
 # eval/experiment_config.yaml
 # Specification and pre-experiment freeze configuration.
+# IMPORTANT: This file must always stay in sync with pipelineguardian/llm_config.py.
+# Any model/temperature change requires bumping prompt_version/context_schema_version
+# and re-tagging experiment-frozen before more Yang-corpus evaluations.
 
-experiment_status: UNFROZEN (Pre-experiment Infrastructure Ready)
+experiment_status: UNFROZEN (Infrastructure Ready — Awaiting LLM Evaluation Runs)
 
-# Code & Model Configurations
-llm_model: llama-3.3-70b-versatile
+# Code & Model Configurations (must match pipelineguardian/llm_config.py)
+llm_model: qwen/qwen3.8-27b
 llm_provider: groq
 llm_temperature: 0
 llm_runs_per_notebook: 3

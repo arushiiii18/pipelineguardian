@@ -12,9 +12,10 @@ PROMPT_VERSION and/or CONTEXT_SCHEMA_VERSION (as applicable) and re-tag
 run_manifest.jsonl and experiment_config.yaml record these values at each run.
 """
 
-LLM_MODEL = "llama-3.3-70b-versatile"
+LLM_MODEL = "qwen/qwen3.8-27b"
 LLM_PROVIDER = "groq"
 LLM_TEMPERATURE = 0
+LLM_MAX_TOKENS = 1500
 LLM_RUNS_PER_NOTEBOOK = 3   # for llm_only, llm_with_context, hybrid during final Yang eval
 PROMPT_VERSION = "v1"       # bump this and re-freeze if any prompt text changes
 CONTEXT_SCHEMA_VERSION = "v1"  # bump this and re-freeze if NotebookContext fields change

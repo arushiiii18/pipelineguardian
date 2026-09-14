@@ -415,6 +415,10 @@ def _append_run_manifest(condition: AuditCondition, config: dict):
 
 
 def write_results(results: dict):
+    cond_name = results.get("condition", "unknown")
+    cond_json_path = os.path.join(HERE, f"yang_results_{cond_name}.json")
+    with open(cond_json_path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2)
     with open(RESULTS_JSON_PATH, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
 

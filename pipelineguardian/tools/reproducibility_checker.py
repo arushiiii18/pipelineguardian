@@ -36,6 +36,22 @@ def _line_to_cell(pset, line):
     return pset.line_to_cell.get(line) if pset.line_to_cell else None
 
 
+# Splitters that are only non-deterministic when shuffle=True
+_SHUFFLE_CONDITIONAL = {"KFold", "StratifiedKFold"}
+
+
+def _has_shuffle_enabled(node: ast.Call) -> bool:
+    """Return True if shuffle=True is explicitly set on this call node."""
+    for kw in node.keywords:
+        if kw.arg == "shuffle":
+            if isinstance(kw.value, ast.Constant) and kw.value.value is True:
+                return True
+            # Any non-False, non-None value for shuffle (e.g. a variable) — treat as potentially True
+            if not isinstance(kw.value, ast.Constant):
+                return True
+    return False
+
+
 def check_missing_random_state(tree, pset) -> list[Issue]:
     issues = []
     for node in ast.walk(tree):
@@ -45,6 +61,10 @@ def check_missing_random_state(tree, pset) -> list[Issue]:
         if name not in NEEDS_RANDOM_STATE:
             continue
         if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name) and node.func.value.id == "random":
+            continue
+        # KFold/StratifiedKFold are only non-deterministic when shuffle=True.
+        # Without shuffle (default False), they are deterministic — no random_state needed.
+        if name in _SHUFFLE_CONDITIONAL and not _has_shuffle_enabled(node):
             continue
         has_rs = any(kw.arg == "random_state" for kw in node.keywords)
         if has_rs:
@@ -95,10 +115,17 @@ def check_missing_seed_numpy(source, tree, pset) -> list[Issue]:
     uses_np_random = ("np.random." in source) or ("numpy.random." in source)
     if not uses_np_random:
         return []
+    # Accept both the legacy np.random.seed() AND the modern np.random.default_rng(seed)
+    # The modern Generator API (default_rng) is seeded at construction time.
     seeded = any(
         isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
-        and n.func.attr == "seed"
-        and isinstance(n.func.value, ast.Attribute) and n.func.value.attr == "random"
+        and n.func.attr in ("seed", "default_rng")
+        and (
+            # np.random.seed(...)
+            (n.func.attr == "seed" and isinstance(n.func.value, ast.Attribute) and n.func.value.attr == "random")
+            # np.random.default_rng(seed) — seeded if called with at least one positional/keyword arg
+            or (n.func.attr == "default_rng" and (n.args or any(kw.arg in (None, "seed") for kw in n.keywords)))
+        )
         for n in ast.walk(tree)
     )
     if seeded:
