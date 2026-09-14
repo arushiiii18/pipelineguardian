@@ -11,7 +11,7 @@ code is appropriate given the signal, not just flagging "signal present."
 from __future__ import annotations
 from typing import Protocol, Optional
 from pydantic import BaseModel, Field
-from pipelineguardian.models import Issue, Severity, Confidence
+from pipelineguardian.models import Issue, Severity, Confidence, Category
 from pipelineguardian.tools.schema_inspector import SchemaSignals
 
 
@@ -93,7 +93,8 @@ def build_default_llm() -> StructuredLLM:
     load_dotenv()  # reads GROQ_API_KEY from a .env file in the project root, if present
 
     from langchain_groq import ChatGroq
-    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+    from pipelineguardian.llm_config import LLM_MODEL, LLM_TEMPERATURE
+    llm = ChatGroq(model=LLM_MODEL, temperature=LLM_TEMPERATURE)
     return llm.with_structured_output(ValidationJudgment)
 
 
@@ -109,6 +110,7 @@ def review(pset, signals: SchemaSignals, llm: Optional[StructuredLLM] = None) ->
 
     return [Issue(
         check_name="validation_strategy_mismatch",
+        category=Category.VALIDATION_STRATEGY,
         severity=Severity.HIGH,
         confidence=Confidence.INFERRED,
         message=judgment.reasoning,

@@ -11,8 +11,9 @@ from collections import Counter
 
 import pytest
 
+import ast
 from pipelineguardian.tools.notebook_parser import load_source
-from pipelineguardian.tools import leakage_detector, reproducibility_checker
+from pipelineguardian.tools import leakage_detector, reproducibility_checker, overlap_detector, multitest_detector
 
 HERE = os.path.dirname(__file__)
 FIXTURES_DIR = os.path.join(HERE, "..", "eval", "synthetic_notebooks")
@@ -24,7 +25,13 @@ with open(EXPECTED_PATH) as f:
 
 def _all_issue_names(path):
     pset = load_source(path)
-    issues = leakage_detector.run(pset) + reproducibility_checker.run(pset)
+    tree = ast.parse(pset.source)
+    issues = (
+        leakage_detector.run(pset)
+        + reproducibility_checker.run(pset)
+        + overlap_detector.run(tree, pset)
+        + multitest_detector.run(tree, pset)
+    )
     return [i.check_name for i in issues]
 
 

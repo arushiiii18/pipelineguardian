@@ -13,7 +13,7 @@ Scope:
 
 import ast
 import os
-from pipelineguardian.models import Issue, Severity, Confidence
+from pipelineguardian.models import Issue, Severity, Confidence, Category, IssueSource
 
 NEEDS_RANDOM_STATE = {
     "train_test_split", "KFold", "StratifiedKFold", "RandomForestClassifier",
@@ -44,11 +44,15 @@ def check_missing_random_state(tree, pset) -> list[Issue]:
         name = _call_name(node)
         if name not in NEEDS_RANDOM_STATE:
             continue
+        if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name) and node.func.value.id == "random":
+            continue
         has_rs = any(kw.arg == "random_state" for kw in node.keywords)
         if has_rs:
             continue
         issues.append(Issue(
             check_name="missing_random_state",
+            category=Category.REPRODUCIBILITY,
+            source=IssueSource.RULE,
             severity=Severity.MEDIUM,
             confidence=Confidence.DETERMINISTIC,
             message=f"'{name}(...)' on line {node.lineno} has no random_state — "
@@ -74,6 +78,8 @@ def check_missing_seed_torch(source, tree, pset) -> list[Issue]:
         return []
     return [Issue(
         check_name="missing_seed_torch",
+        category=Category.REPRODUCIBILITY,
+        source=IssueSource.RULE,
         severity=Severity.MEDIUM,
         confidence=Confidence.DETERMINISTIC,
         message="torch is imported and used, but torch.manual_seed(...) is never called.",
@@ -99,6 +105,8 @@ def check_missing_seed_numpy(source, tree, pset) -> list[Issue]:
         return []
     return [Issue(
         check_name="missing_seed_numpy",
+        category=Category.REPRODUCIBILITY,
+        source=IssueSource.RULE,
         severity=Severity.MEDIUM,
         confidence=Confidence.DETERMINISTIC,
         message="numpy.random is used, but np.random.seed(...) is never called.",
@@ -109,11 +117,39 @@ def check_missing_seed_numpy(source, tree, pset) -> list[Issue]:
     )]
 
 
+def check_missing_seed_python_random(source, tree, pset) -> list[Issue]:
+    uses_random = ("random." in source) and ("import random" in source)
+    if not uses_random:
+        return []
+    seeded = any(
+        isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+        and n.func.attr == "seed" and isinstance(n.func.value, ast.Name)
+        and n.func.value.id == "random"
+        for n in ast.walk(tree)
+    )
+    if seeded:
+        return []
+    return [Issue(
+        check_name="missing_seed_python_random",
+        category=Category.REPRODUCIBILITY,
+        source=IssueSource.RULE,
+        severity=Severity.MEDIUM,
+        confidence=Confidence.DETERMINISTIC,
+        message="Python's random module is used, but random.seed(...) is never called.",
+        evidence="random.* used without random.seed(...)",
+        line=None,
+        cell=None,
+        suggested_fix="Call random.seed(<int>) near the top of the script.",
+    )]
+
+
 def check_missing_requirements_pins(project_dir: str) -> list[Issue]:
     req_path = os.path.join(project_dir, "requirements.txt")
     if not os.path.exists(req_path):
         return [Issue(
             check_name="missing_requirements_file",
+            category=Category.REPRODUCIBILITY,
+            source=IssueSource.RULE,
             severity=Severity.LOW,
             confidence=Confidence.DETERMINISTIC,
             message="No requirements.txt found in the project directory.",
@@ -126,6 +162,8 @@ def check_missing_requirements_pins(project_dir: str) -> list[Issue]:
     if lines and not pinned:
         return [Issue(
             check_name="unpinned_requirements",
+            category=Category.REPRODUCIBILITY,
+            source=IssueSource.RULE,
             severity=Severity.LOW,
             confidence=Confidence.DETERMINISTIC,
             message="requirements.txt exists but has no '==' version pins.",
@@ -141,6 +179,7 @@ def run(pset, project_dir: str | None = None) -> list[Issue]:
     issues += check_missing_random_state(tree, pset)
     issues += check_missing_seed_torch(pset.source, tree, pset)
     issues += check_missing_seed_numpy(pset.source, tree, pset)
+    issues += check_missing_seed_python_random(pset.source, tree, pset)
     if project_dir:
         issues += check_missing_requirements_pins(project_dir)
     return issues

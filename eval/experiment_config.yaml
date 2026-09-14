@@ -1,0 +1,22 @@
+# eval/experiment_config.yaml
+# Generated at experiment-frozen tag (Phase 8 completion).
+# Values are copied from pipelineguardian/llm_config.py at freeze time.
+# DO NOT edit manually. If any value changes, bump PROMPT_VERSION or
+# CONTEXT_SCHEMA_VERSION in llm_config.py and re-tag experiment-frozen.
+
+llm_model: llama-3.3-70b-versatile
+llm_provider: groq
+llm_temperature: 0
+llm_runs_per_notebook: 3
+prompt_version: v1
+context_schema_version: v1
+
+# Git commit hash of the frozen detector/prompt code.
+# Set this to the actual hash at `git tag experiment-frozen` time.
+git_commit_at_freeze: "TBD — populate with `git rev-parse HEAD` at experiment-frozen tag"
+
+# Freeze checklist (complete all before running final Yang eval):
+# [ ] All rule-engine tests pass (pytest tests/)
+# [ ] Prompt diff fairness check confirmed (llm_only vs llm_with_context — context block only)
+# [ ] experiment_config.yaml committed with correct git_commit_at_freeze
+# [ ] `git tag experiment-frozen` applied
