@@ -1,6 +1,6 @@
 # Yang-Corpus Evaluation Results
 
-Condition: **rule_only**  | Notebooks scored: 100  | Skipped: 0  | **Macro-F1: 0.3866**
+Condition: **llm_only**  | Notebooks scored: 100  | Skipped: 0  | **Macro-F1: 0.0513**
 
 > [!NOTE]
 > Categories REPRODUCIBILITY and VALIDATION_STRATEGY have no Yang ground-truth labels > and are evaluated via dedicated separate benchmarks.
@@ -9,6 +9,12 @@ Condition: **rule_only**  | Notebooks scored: 100  | Skipped: 0  | **Macro-F1: 0
 
 | Category | Precision | Recall | F1 | TP | FP | FN |
 |---|---|---|---|---|---|---|
-| Preprocessing | 0.7692 | 0.5 | 0.6061 | 10 | 3 | 10 |
-| Overlap | 0.2 | 0.125 | 0.1538 | 1 | 4 | 7 |
-| Multi-test | 1.0 | 0.25 | 0.4 | 8 | 0 | 24 |
+| Preprocessing | 1.0 | 0.05 | 0.0952 | 1 | 0 | 19 |
+| Overlap | 1.0 | 0.0 | 0.0 | 0 | 0 | 8 |
+| Multi-test | 0.5 | 0.0312 | 0.0588 | 1 | 1 | 31 |
+
+## LLM Variance (mean ± std F1 over runs)
+
+- Preprocessing: 0.0952 ± 0.0
+- Overlap: 0.0 ± 0.0
+- Multi-test: 0.0588 ± 0.0
