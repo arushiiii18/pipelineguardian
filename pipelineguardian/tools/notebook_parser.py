@@ -45,6 +45,9 @@ def parse_notebook(path: str) -> ParsedSource:
         cell_source = cell.source
         cell_lines = cell_source.splitlines() or [""]
         for line in cell_lines:
+            stripped_l = line.lstrip()
+            if stripped_l.startswith(("!", "%", "?")) or "get_ipython(" in stripped_l:
+                line = "# " + line
             lines.append(line)
             line_to_cell[len(lines)] = cell_idx
         lines.append("")  # blank separator so cell boundaries don't merge statements

@@ -1,22 +1,35 @@
 # eval/experiment_config.yaml
-# Generated at experiment-frozen tag (Phase 8 completion).
-# Values are copied from pipelineguardian/llm_config.py at freeze time.
-# DO NOT edit manually. If any value changes, bump PROMPT_VERSION or
-# CONTEXT_SCHEMA_VERSION in llm_config.py and re-tag experiment-frozen.
+# Specification and pre-experiment freeze configuration.
 
+experiment_status: UNFROZEN (Pre-experiment Infrastructure Ready)
+
+# Code & Model Configurations
 llm_model: llama-3.3-70b-versatile
 llm_provider: groq
 llm_temperature: 0
 llm_runs_per_notebook: 3
 prompt_version: v1
 context_schema_version: v1
+random_seed: 42
 
-# Git commit hash of the frozen detector/prompt code.
-# Set this to the actual hash at `git tag experiment-frozen` time.
-git_commit_at_freeze: "TBD — populate with `git rev-parse HEAD` at experiment-frozen tag"
+# Corpus & Benchmark Versions
+yang_corpus_version: v1.0 (PREPROCESSING, OVERLAP, MULTI_TEST)
+synthetic_fixtures_version: v2.0 (40 diverse fixtures)
+reproducibility_benchmark_version: v1.0 (eval/reproducibility_benchmark/ground_truth.json)
+validation_benchmark_version: v1.0 (eval/validation_benchmark/ground_truth.json)
+real_world_reproducibility_version: v1.0 (eval/real_world_reproducibility/ - pending public collection)
 
-# Freeze checklist (complete all before running final Yang eval):
-# [ ] All rule-engine tests pass (pytest tests/)
-# [ ] Prompt diff fairness check confirmed (llm_only vs llm_with_context — context block only)
-# [ ] experiment_config.yaml committed with correct git_commit_at_freeze
-# [ ] `git tag experiment-frozen` applied
+# Git commit hash (Populated when status set to FROZEN)
+git_commit_at_freeze: "TBD — populate with `git rev-parse HEAD` when experiment tag applied"
+freeze_date: "TBD"
+
+# Pre-Experiment Freeze Checklist (Must be 100% checked before setting status to FROZEN):
+# [ ] 1. All unit and detector tests pass cleanly (`python -m pytest tests/ -q`)
+# [ ] 2. Issue schema category and source fields non-optional and verified across all 4 architectures
+# [ ] 3. Synthetic benchmark (40 fixtures) passes without regression
+# [ ] 4. Labeling rubrics written and frozen (`eval/rubrics/`)
+# [ ] 5. Curated benchmarks frozen (`eval/reproducibility_benchmark/`, `eval/validation_benchmark/`)
+# [ ] 6. Real-world reproducibility corpus collected and dual-annotated / blind-labeled
+# [ ] 7. Inter-rater / self-agreement computed and documented (`eval/compute_agreement.py`)
+# [ ] 8. `git_commit_at_freeze` populated with output of `git rev-parse HEAD`
+# [ ] 9. Apply git tag: `git tag -a experiment-frozen -m "PipelineGuardian experiment frozen"`

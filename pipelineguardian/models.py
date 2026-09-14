@@ -40,8 +40,8 @@ class IssueSource(str, Enum):
 
 class Issue(BaseModel):
     check_name: str = Field(..., description="Machine-readable id, e.g. 'scaler_fit_before_split'")
-    category: Optional[Category] = Field(None, description="Which leakage/reproducibility category this belongs to")
-    source: Optional[IssueSource] = Field(None, description="Which condition pipeline produced this finding")
+    category: Category = Field(..., description="Which leakage/reproducibility category this belongs to")
+    source: IssueSource = Field(..., description="Which condition pipeline produced this finding")
     severity: Severity
     confidence: Confidence
     message: str = Field(..., description="Human-readable one-line explanation")

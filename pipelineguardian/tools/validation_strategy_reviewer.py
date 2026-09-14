@@ -11,7 +11,7 @@ code is appropriate given the signal, not just flagging "signal present."
 from __future__ import annotations
 from typing import Protocol, Optional
 from pydantic import BaseModel, Field
-from pipelineguardian.models import Issue, Severity, Confidence, Category
+from pipelineguardian.models import Issue, Severity, Confidence, Category, IssueSource
 from pipelineguardian.tools.schema_inspector import SchemaSignals
 
 
@@ -111,6 +111,7 @@ def review(pset, signals: SchemaSignals, llm: Optional[StructuredLLM] = None) ->
     return [Issue(
         check_name="validation_strategy_mismatch",
         category=Category.VALIDATION_STRATEGY,
+        source=IssueSource.LLM_CONTEXT,
         severity=Severity.HIGH,
         confidence=Confidence.INFERRED,
         message=judgment.reasoning,

@@ -1,0 +1,138 @@
+{
+  "description": "Ground-truth benchmark dataset for VALIDATION_STRATEGY category based on eval/rubrics/validation_strategy_rubric.md",
+  "version": "1.0",
+  "test_cases": [
+    {
+      "id": "val_01_time_series_random_split",
+      "signal_type": "timestamp",
+      "expected_is_appropriate": false,
+      "signals": {
+        "timestamp_columns": ["date"],
+        "group_columns": [],
+        "imbalance": null
+      },
+      "code": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\ndf = pd.DataFrame({'date': pd.date_range('2023-01-01', periods=100), 'val': range(100)})\nX_train, X_test = train_test_split(df, test_size=0.2, random_state=42)",
+      "notes": "Timestamp column present, but split randomly using train_test_split (causes lookahead leakage)"
+    },
+    {
+      "id": "val_02_time_series_temporal_split",
+      "signal_type": "timestamp",
+      "expected_is_appropriate": true,
+      "signals": {
+        "timestamp_columns": ["date"],
+        "group_columns": [],
+        "imbalance": null
+      },
+      "code": "import pandas as pd\ndf = pd.DataFrame({'date': pd.date_range('2023-01-01', periods=100), 'val': range(100)})\ntrain = df[df['date'] < '2023-03-01']\ntest = df[df['date'] >= '2023-03-01']",
+      "notes": "Timestamp column present, split chronologically at cutoff date"
+    },
+    {
+      "id": "val_03_time_series_split_class",
+      "signal_type": "timestamp",
+      "expected_is_appropriate": true,
+      "signals": {
+        "timestamp_columns": ["timestamp"],
+        "group_columns": [],
+        "imbalance": null
+      },
+      "code": "from sklearn.model_selection import TimeSeriesSplit\ntss = TimeSeriesSplit(n_splits=5)\nfor train_idx, test_idx in tss.split(X):\n    X_tr, X_te = X[train_idx], X[test_idx]",
+      "notes": "TimeSeriesSplit correctly handles temporal ordering"
+    },
+    {
+      "id": "val_04_timestamp_irrelevant_metadata",
+      "signal_type": "timestamp",
+      "expected_is_appropriate": true,
+      "signals": {
+        "timestamp_columns": ["created_at"],
+        "group_columns": [],
+        "imbalance": null
+      },
+      "code": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\n# Static user demographic prediction, created_at is just account creation metadata date\nX = df.drop(columns=['created_at', 'target'])\ny = df['target']\nX_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "notes": "Timestamp is non-sequential metadata dropped prior to feature matrix; random split is acceptable"
+    },
+    {
+      "id": "val_05_grouped_random_split",
+      "signal_type": "group",
+      "expected_is_appropriate": false,
+      "signals": {
+        "timestamp_columns": [],
+        "group_columns": ["patient_id"],
+        "imbalance": null
+      },
+      "code": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\ndf = pd.read_csv('medical_records.csv') # patient_id has repeated rows per patient\nX_tr, X_te, y_tr, y_te = train_test_split(df.drop(columns=['target']), df['target'], test_size=0.2, random_state=42)",
+      "notes": "Repeated patient_id records split randomly, leaking patient identity across train/test"
+    },
+    {
+      "id": "val_06_grouped_groupkfold_split",
+      "signal_type": "group",
+      "expected_is_appropriate": true,
+      "signals": {
+        "timestamp_columns": [],
+        "group_columns": ["patient_id"],
+        "imbalance": null
+      },
+      "code": "from sklearn.model_selection import GroupKFold\ngkf = GroupKFold(n_splits=5)\nfor train_idx, test_idx in gkf.split(X, y, groups=df['patient_id']):\n    pass",
+      "notes": "GroupKFold prevents group leakage across folds"
+    },
+    {
+      "id": "val_07_grouped_groupshufflesplit",
+      "signal_type": "group",
+      "expected_is_appropriate": true,
+      "signals": {
+        "timestamp_columns": [],
+        "group_columns": ["user_id"],
+        "imbalance": null
+      },
+      "code": "from sklearn.model_selection import GroupShuffleSplit\ngss = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=42)\ntrain_idx, test_idx = next(gss.split(X, y, groups=df['user_id']))",
+      "notes": "GroupShuffleSplit separates groups completely between train and test"
+    },
+    {
+      "id": "val_08_imbalanced_unstratified_split",
+      "signal_type": "imbalance",
+      "expected_is_appropriate": false,
+      "signals": {
+        "timestamp_columns": [],
+        "group_columns": [],
+        "imbalance": {"column": "is_fraud", "minority_ratio": 0.01}
+      },
+      "code": "from sklearn.model_selection import train_test_split\n# Fraud detection dataset (1% positive class)\nX_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "notes": "1% fraud target split without stratify parameter"
+    },
+    {
+      "id": "val_09_imbalanced_stratified_split",
+      "signal_type": "imbalance",
+      "expected_is_appropriate": true,
+      "signals": {
+        "timestamp_columns": [],
+        "group_columns": [],
+        "imbalance": {"column": "is_fraud", "minority_ratio": 0.01}
+      },
+      "code": "from sklearn.model_selection import train_test_split\nX_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)",
+      "notes": "Imbalanced target split with stratify=y"
+    },
+    {
+      "id": "val_10_imbalanced_stratifiedkfold",
+      "signal_type": "imbalance",
+      "expected_is_appropriate": true,
+      "signals": {
+        "timestamp_columns": [],
+        "group_columns": [],
+        "imbalance": {"column": "target", "minority_ratio": 0.03}
+      },
+      "code": "from sklearn.model_selection import StratifiedKFold\nskf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\nfor train_idx, test_idx in skf.split(X, y):\n    pass",
+      "notes": "StratifiedKFold preserves minority ratio across folds"
+    },
+    {
+      "id": "val_11_no_signals_standard_split",
+      "signal_type": "none",
+      "expected_is_appropriate": true,
+      "signals": {
+        "timestamp_columns": [],
+        "group_columns": [],
+        "imbalance": null
+      },
+      "code": "from sklearn.model_selection import train_test_split\nX_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "notes": "Standard tabular dataset without time, group, or severe imbalance signals; standard split is appropriate"
+    }
+  ]
+}

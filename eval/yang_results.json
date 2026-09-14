@@ -1,0 +1,649 @@
+{
+  "condition": "rule_only",
+  "per_category": {
+    "pre": {
+      "precision": 0.7692,
+      "recall": 0.5,
+      "f1": 0.6061,
+      "tp": 10,
+      "fp": 3,
+      "fn": 10,
+      "tn": 77
+    },
+    "overlap": {
+      "precision": 0.2,
+      "recall": 0.125,
+      "f1": 0.1538,
+      "tp": 1,
+      "fp": 4,
+      "fn": 7,
+      "tn": 88
+    },
+    "multi": {
+      "precision": 1.0,
+      "recall": 0.25,
+      "f1": 0.4,
+      "tp": 8,
+      "fp": 0,
+      "fn": 24,
+      "tn": 68
+    }
+  },
+  "macro_f1": 0.3866,
+  "per_notebook": [
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-05/nb_1244.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-07/nb_949.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": true
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-09/nb_498.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-04/nb_1743.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-15/nb_3436.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-17/nb_3303.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-14/nb_100.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-23/nb_2646.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-21/nb_1239.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-07/nb_4061.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-26/nb_1094.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-17/nb_1782.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-02/nb_3065.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-30/nb_195.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-12/nb_1942.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-01/nb_604.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-25/nb_1162.py",
+      "pre_pred": false,
+      "overlap_pred": true,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-09/nb_2544.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-10/nb_2760.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": true
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-17/nb_1585.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-24/nb_2945.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-30/nb_300.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-29/nb_2021.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-24/nb_2053.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-10/nb_322.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-27/nb_1550.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-21/nb_2660.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-27/nb_1060.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-06/nb_1824.py",
+      "pre_pred": false,
+      "overlap_pred": true,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-13/nb_959.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-21/nb_2685.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-08/nb_2978.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-23/nb_524.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-22/nb_463.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-01/nb_1334.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-27/nb_3449.py",
+      "pre_pred": false,
+      "overlap_pred": true,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-13/nb_1764.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-08/nb_1761.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-16/nb_318.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-18/nb_1959.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-17/nb_4156.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-10/nb_1411.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-24/nb_2439.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-05/nb_2816.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": true
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-21/nb_3988.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-08/nb_678.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-30/nb_3594.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-12/nb_125.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-17/nb_669.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": true
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-24/nb_934.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-09/nb_1070.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-11/nb_86.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-12/nb_3074.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-29/nb_1147.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-20/nb_1322.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": true
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-15/nb_281.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-29/nb_416.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-09/nb_1559.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-25/nb_2239.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-14/nb_2780.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-05/nb_1162.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-02/nb_1449.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-25/nb_2421.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-09/nb_1731.py",
+      "pre_pred": false,
+      "overlap_pred": true,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-10/nb_1176.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-05/nb_2770.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": true
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-30/nb_89.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-11/nb_605.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-10/nb_1970.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-12/nb_677.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-01/nb_2528.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-23/nb_2111.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-04/nb_2749.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-10/nb_627.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-05/nb_773.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-09/nb_334.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-14/nb_65.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-20/nb_1743.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-18/nb_278.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-11/nb_1548.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-28/nb_474.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-20/nb_296.py",
+      "pre_pred": true,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-01/nb_1290.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-30/nb_3336.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": true
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-27/nb_4381.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-19/nb_1670.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-07/nb_2921.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": true
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-05/nb_1630.py",
+      "pre_pred": false,
+      "overlap_pred": true,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-29/nb_1504.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-13/nb_3144.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-03/nb_891.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-06/nb_1417.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-04/nb_1087.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-30/nb_619.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-05/nb_1633.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-13/nb_606.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-12/nb_606.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-03/nb_2630.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-28/nb_1940.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    },
+    {
+      "nb_id": "GitHub-data/notebooks/2021-09-02/nb_2442.py",
+      "pre_pred": false,
+      "overlap_pred": false,
+      "multi_pred": false
+    }
+  ],
+  "run_variance": {},
+  "n_scored": 100,
+  "n_skipped": 0,
+  "out_of_scope_categories": [
+    "reproducibility",
+    "validation_strategy"
+  ],
+  "config": {
+    "llm_model": "llama-3.3-70b-versatile",
+    "llm_temperature": 0,
+    "prompt_version": "v1",
+    "context_schema_version": "v1",
+    "runs": 1
+  }
+}

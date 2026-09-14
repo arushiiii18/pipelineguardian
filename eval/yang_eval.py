@@ -111,11 +111,27 @@ def _resolve_notebook_path(nb_id: str, notebooks_dir: str = NOTEBOOKS_DIR) -> Op
     if os.path.exists(candidate):
         return candidate
 
-    # Last resort: search by basename
+    # Last resort: search by basename or flattened hyphenated form (e.g. 2021-09-05-nb_1244.ipynb)
     basename = os.path.basename(nb_id)
+    stem, ext = os.path.splitext(basename)
+
+    # Flattened name format: 2021-09-05/nb_1244.py -> 2021-09-05-nb_1244.ipynb
+    flattened = stripped.replace("/", "-").replace("\\", "-")
+    if flattened.endswith(".py"):
+        flattened_ipynb = flattened[:-3] + ".ipynb"
+    else:
+        flattened_ipynb = flattened + ".ipynb"
+
+    for candidate_name in (flattened, flattened_ipynb, basename, stem + ".ipynb"):
+        candidate = os.path.join(notebooks_dir, candidate_name)
+        if os.path.exists(candidate):
+            return candidate
+
     for root, dirs, files in os.walk(notebooks_dir):
         if basename in files:
             return os.path.join(root, basename)
+        if (stem + ".ipynb") in files:
+            return os.path.join(root, stem + ".ipynb")
 
     return None
 
@@ -248,6 +264,8 @@ def score_condition(
             "tp": tp, "fp": fp, "fn": fn, "tn": tn,
         }
 
+    macro_f1 = sum(m["f1"] for m in per_category.values()) / len(per_category) if per_category else 0.0
+
     # LLM variance: mean ± std over runs per category
     run_variance: dict[str, dict] = {}
     if condition in LLM_CONDITIONS and runs > 1:
@@ -282,10 +300,12 @@ def score_condition(
     return {
         "condition": condition.value,
         "per_category": per_category,
+        "macro_f1": round(macro_f1, 4),
         "per_notebook": per_notebook,
         "run_variance": run_variance,
         "n_scored": len(per_notebook),
         "n_skipped": len(missing_notebooks),
+        "out_of_scope_categories": [Category.REPRODUCIBILITY.value, Category.VALIDATION_STRATEGY.value],
     }
 
 
@@ -298,13 +318,10 @@ def mcnemar_test(cond_a_preds: list[bool], cond_b_preds: list[bool],
     """Compute McNemar's test comparing two conditions on paired notebook outcomes.
 
     Returns {statistic, p_value, n01, n10} where n01 = A wrong, B right and
-    n10 = A right, B wrong. Uses scipy.stats for the exact/mid-p version.
+    n10 = A right, B wrong. Uses scipy.stats binomtest (or exact fallback) for p-value.
     """
-    try:
-        from scipy.stats import contingency
-        import numpy as np
-    except ImportError:
-        return {"error": "scipy not installed — install scipy for significance testing"}
+    if len(cond_a_preds) != len(cond_b_preds) or len(cond_a_preds) != len(gt):
+        raise ValueError("Input lists must have identical lengths for paired McNemar test")
 
     a_correct = [p == g for p, g in zip(cond_a_preds, gt)]
     b_correct = [p == g for p, g in zip(cond_b_preds, gt)]
@@ -314,21 +331,63 @@ def mcnemar_test(cond_a_preds: list[bool], cond_b_preds: list[bool],
     n10 = sum(1 for a, b in zip(a_correct, b_correct) if a and not b)
     n11 = sum(1 for a, b in zip(a_correct, b_correct) if a and b)
 
-    table = np.array([[n11, n10], [n01, n00]])
-    # mid-p McNemar via exact binomial
-    from scipy.stats import binom_test
     n = n01 + n10
     if n == 0:
         return {"statistic": 0.0, "p_value": 1.0, "n01": 0, "n10": 0}
-    # Two-tailed mid-p
-    p_value = float(binom_test(n10, n, 0.5))
-    statistic = (abs(n10 - n01) - 1) ** 2 / (n10 + n01) if (n10 + n01) > 0 else 0.0
+
+    statistic = (abs(n10 - n01) - 1) ** 2 / (n10 + n01) if abs(n10 - n01) >= 1 else 0.0
+
+    p_value = 1.0
+    try:
+        from scipy.stats import binomtest
+        p_value = float(binomtest(n10, n, 0.5).pvalue)
+    except (ImportError, AttributeError):
+        try:
+            from scipy.stats import binom_test
+            p_value = float(binom_test(n10, n, 0.5))
+        except (ImportError, AttributeError):
+            import math
+            prob_k = math.comb(n, n10) * (0.5 ** n)
+            p_value = min(1.0, 2.0 * sum(math.comb(n, i) * (0.5 ** n) for i in range(min(n10, n - n10) + 1)))
+
     return {
         "statistic": round(statistic, 4),
         "p_value": round(p_value, 4),
         "n01": n01,
         "n10": n10,
     }
+
+
+def compare_architectures(results_by_condition: dict[str, dict], ground_truth: dict[str, dict[str, bool]]) -> dict:
+    """Perform paired per-notebook McNemar comparisons across conditions for each category.
+
+    results_by_condition maps condition_name -> output from score_condition().
+    Returns dict of pairwise McNemar test results.
+    """
+    cols = list(YANG_CATEGORY_TO_COLUMN.values())
+    conditions = list(results_by_condition.keys())
+    comparisons = {}
+
+    for i in range(len(conditions)):
+        for j in range(i + 1, len(conditions)):
+            cond_a = conditions[i]
+            cond_b = conditions[j]
+            pair_key = f"{cond_a}_vs_{cond_b}"
+            comparisons[pair_key] = {}
+
+            # Build aligned prediction vectors per notebook
+            nb_ids_a = {row["nb_id"]: row for row in results_by_condition[cond_a]["per_notebook"]}
+            nb_ids_b = {row["nb_id"]: row for row in results_by_condition[cond_b]["per_notebook"]}
+            common_nbs = sorted(set(nb_ids_a.keys()) & set(nb_ids_b.keys()))
+
+            for col in cols:
+                preds_a = [nb_ids_a[nb][f"{col}_pred"] for nb in common_nbs]
+                preds_b = [nb_ids_b[nb][f"{col}_pred"] for nb in common_nbs]
+                gt_vec = [ground_truth.get(nb, {}).get(col, False) for nb in common_nbs]
+
+                comparisons[pair_key][col] = mcnemar_test(preds_a, preds_b, gt_vec)
+
+    return comparisons
 
 
 # ---------------------------------------------------------------------------
@@ -364,7 +423,11 @@ def write_results(results: dict):
         "# Yang-Corpus Evaluation Results\n",
         f"Condition: **{results.get('condition', '?')}**  "
         f"| Notebooks scored: {results.get('n_scored', '?')}  "
-        f"| Skipped: {results.get('n_skipped', 0)}\n",
+        f"| Skipped: {results.get('n_skipped', 0)}  "
+        f"| **Macro-F1: {results.get('macro_f1', '?')}**\n",
+        "> [!NOTE]\n"
+        "> Categories REPRODUCIBILITY and VALIDATION_STRATEGY have no Yang ground-truth labels "
+        "> and are evaluated via dedicated separate benchmarks.\n",
         "## Per-Category Metrics\n",
         "| Category | Precision | Recall | F1 | TP | FP | FN |",
         "|---|---|---|---|---|---|---|",

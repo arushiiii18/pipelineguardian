@@ -125,3 +125,57 @@ def test_case_insensitive_y_detection():
     assert gt["nb7.py"]["pre"] is True
     assert gt["nb7.py"]["overlap"] is True
     os.unlink(path)
+
+
+# ---------------------------------------------------------------------------
+# McNemar's test & architecture comparison tests
+# ---------------------------------------------------------------------------
+
+def test_mcnemar_test_basic():
+    from eval.yang_eval import mcnemar_test
+    # Condition A: [T, F], Condition B: [F, T], GT: [T, T]
+    # A correct: [True, False], B correct: [False, True]
+    # n01 = 1 (A wrong, B right), n10 = 1 (A right, B wrong)
+    res = mcnemar_test([True, False], [False, True], [True, True])
+    assert res["n01"] == 1
+    assert res["n10"] == 1
+    assert res["p_value"] == 1.0
+    assert "statistic" in res
+
+
+def test_mcnemar_test_zero_discordant():
+    from eval.yang_eval import mcnemar_test
+    # Both identical predictions
+    res = mcnemar_test([True, False], [True, False], [True, True])
+    assert res["n01"] == 0
+    assert res["n10"] == 0
+    assert res["p_value"] == 1.0
+    assert res["statistic"] == 0.0
+
+
+def test_compare_architectures_helper():
+    from eval.yang_eval import compare_architectures
+    gt = {
+        "nb1.py": {"pre": True, "overlap": False, "multi": False},
+        "nb2.py": {"pre": False, "overlap": True, "multi": False},
+    }
+    res_a = {
+        "condition": "rule_only",
+        "per_notebook": [
+            {"nb_id": "nb1.py", "pre_pred": True, "overlap_pred": False, "multi_pred": False},
+            {"nb_id": "nb2.py", "pre_pred": False, "overlap_pred": False, "multi_pred": False},
+        ]
+    }
+    res_b = {
+        "condition": "hybrid",
+        "per_notebook": [
+            {"nb_id": "nb1.py", "pre_pred": True, "overlap_pred": False, "multi_pred": False},
+            {"nb_id": "nb2.py", "pre_pred": False, "overlap_pred": True, "multi_pred": False},
+        ]
+    }
+    comps = compare_architectures({"rule_only": res_a, "hybrid": res_b}, gt)
+    assert "rule_only_vs_hybrid" in comps
+    assert "overlap" in comps["rule_only_vs_hybrid"]
+    assert comps["rule_only_vs_hybrid"]["overlap"]["n01"] == 1
+    assert comps["rule_only_vs_hybrid"]["overlap"]["n10"] == 0
+

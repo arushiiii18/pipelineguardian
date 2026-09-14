@@ -1,0 +1,146 @@
+{
+  "description": "Ground-truth dataset for REPRODUCIBILITY category based on eval/rubrics/reproducibility_rubric.md",
+  "version": "1.0",
+  "test_cases": [
+    {
+      "id": "rep_01_py_seed_missing",
+      "sub_check": "missing_python_seed",
+      "expected_issue": true,
+      "code": "import random\nx = [1, 2, 3, 4, 5]\nrandom.shuffle(x)\nprint(x)",
+      "notes": "Uses random.shuffle without calling random.seed"
+    },
+    {
+      "id": "rep_02_py_seed_present",
+      "sub_check": "missing_python_seed",
+      "expected_issue": false,
+      "code": "import random\nrandom.seed(42)\nx = [1, 2, 3, 4, 5]\nrandom.shuffle(x)",
+      "notes": "Calls random.seed(42) before random.shuffle"
+    },
+    {
+      "id": "rep_03_np_seed_missing",
+      "sub_check": "missing_numpy_seed",
+      "expected_issue": true,
+      "code": "import numpy as np\nvals = np.random.rand(10, 5)\nprint(vals.mean())",
+      "notes": "Uses np.random.rand without setting np.random.seed"
+    },
+    {
+      "id": "rep_04_np_seed_present",
+      "sub_check": "missing_numpy_seed",
+      "expected_issue": false,
+      "code": "import numpy as np\nnp.random.seed(42)\nvals = np.random.rand(10, 5)",
+      "notes": "np.random.seed set before random array generation"
+    },
+    {
+      "id": "rep_05_np_generator_seeded",
+      "sub_check": "missing_numpy_seed",
+      "expected_issue": false,
+      "code": "import numpy as np\nrng = np.random.default_rng(42)\nvals = rng.random((10, 5))",
+      "notes": "Uses new numpy random Generator with seed"
+    },
+    {
+      "id": "rep_06_torch_seed_missing",
+      "sub_check": "missing_pytorch_seed",
+      "expected_issue": true,
+      "code": "import torch\nimport torch.nn as nn\nmodel = nn.Linear(10, 2)\noutput = model(torch.randn(5, 10))",
+      "notes": "PyTorch model initialized without setting torch.manual_seed"
+    },
+    {
+      "id": "rep_07_torch_seed_present",
+      "sub_check": "missing_pytorch_seed",
+      "expected_issue": false,
+      "code": "import torch\nimport torch.nn as nn\ntorch.manual_seed(42)\nmodel = nn.Linear(10, 2)",
+      "notes": "torch.manual_seed(42) set before model construction"
+    },
+    {
+      "id": "rep_08_split_random_state_missing",
+      "sub_check": "missing_random_state",
+      "expected_issue": true,
+      "code": "from sklearn.model_selection import train_test_split\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)",
+      "notes": "train_test_split called without random_state"
+    },
+    {
+      "id": "rep_09_split_random_state_present",
+      "sub_check": "missing_random_state",
+      "expected_issue": false,
+      "code": "from sklearn.model_selection import train_test_split\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "notes": "train_test_split explicitly passes random_state=42"
+    },
+    {
+      "id": "rep_10_rf_random_state_missing",
+      "sub_check": "missing_random_state",
+      "expected_issue": true,
+      "code": "from sklearn.ensemble import RandomForestClassifier\nclf = RandomForestClassifier(n_estimators=100)\nclf.fit(X_train, y_train)",
+      "notes": "Stochastic estimator RandomForestClassifier missing random_state"
+    },
+    {
+      "id": "rep_11_rf_random_state_present",
+      "sub_check": "missing_random_state",
+      "expected_issue": false,
+      "code": "from sklearn.ensemble import RandomForestClassifier\nclf = RandomForestClassifier(n_estimators=100, random_state=42)\nclf.fit(X_train, y_train)",
+      "notes": "RandomForestClassifier initialized with random_state=42"
+    },
+    {
+      "id": "rep_12_kmeans_random_state_missing",
+      "sub_check": "missing_random_state",
+      "expected_issue": true,
+      "code": "from sklearn.cluster import KMeans\nkmeans = KMeans(n_clusters=3)\nkmeans.fit(X)",
+      "notes": "KMeans initial centers chosen stochastically without random_state"
+    },
+    {
+      "id": "rep_13_kmeans_random_state_present",
+      "sub_check": "missing_random_state",
+      "expected_issue": false,
+      "code": "from sklearn.cluster import KMeans\nkmeans = KMeans(n_clusters=3, random_state=42)\nkmeans.fit(X)",
+      "notes": "KMeans initialized with random_state=42"
+    },
+    {
+      "id": "rep_14_kfold_shuffle_missing_seed",
+      "sub_check": "missing_random_state",
+      "expected_issue": true,
+      "code": "from sklearn.model_selection import KFold\nkf = KFold(n_splits=5, shuffle=True)\nfor train, test in kf.split(X):\n    pass",
+      "notes": "KFold with shuffle=True lacks random_state"
+    },
+    {
+      "id": "rep_15_kfold_no_shuffle",
+      "sub_check": "missing_random_state",
+      "expected_issue": false,
+      "code": "from sklearn.model_selection import KFold\nkf = KFold(n_splits=5, shuffle=False)\nfor train, test in kf.split(X):\n    pass",
+      "notes": "KFold without shuffle is deterministic, no random_state needed"
+    },
+    {
+      "id": "rep_16_pip_install_unpinned",
+      "sub_check": "unpinned_dependencies",
+      "expected_issue": true,
+      "code": "# !pip install pandas scikit-learn numpy",
+      "notes": "Inline pip install without version specifiers"
+    },
+    {
+      "id": "rep_17_pip_install_pinned",
+      "sub_check": "unpinned_dependencies",
+      "expected_issue": false,
+      "code": "# !pip install pandas==2.0.0 scikit-learn==1.3.0 numpy==1.24.3",
+      "notes": "Inline pip install with exact version pins"
+    },
+    {
+      "id": "rep_18_linear_regression_no_seed",
+      "sub_check": "missing_random_state",
+      "expected_issue": false,
+      "code": "from sklearn.linear_model import LinearRegression\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)",
+      "notes": "LinearRegression is analytical/deterministic, random_state does not exist"
+    },
+    {
+      "id": "rep_19_scaler_no_seed",
+      "sub_check": "missing_random_state",
+      "expected_issue": false,
+      "code": "from sklearn.preprocessing import StandardScaler\nscaler = StandardScaler()\nX_scaled = scaler.fit_transform(X_train)",
+      "notes": "StandardScaler is deterministic, random_state is irrelevant"
+    },
+    {
+      "id": "rep_20_fully_seeded_pipeline",
+      "sub_check": "all",
+      "expected_issue": false,
+      "code": "import random\nimport numpy as np\nimport torch\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\n\nrandom.seed(42)\nnp.random.seed(42)\ntorch.manual_seed(42)\n\nX_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)\nclf = RandomForestClassifier(random_state=42)\nclf.fit(X_tr, y_tr)",
+      "notes": "Fully seeded workflow across all modules"
+    }
+  ]
+}

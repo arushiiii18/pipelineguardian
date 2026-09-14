@@ -1,0 +1,7 @@
+{
+  "description": "Real-world reproducibility benchmark ground truth schema and dataset",
+  "version": "1.0",
+  "status": "UNFROZEN",
+  "notes": "Corpus structure initialized. Populate with real public notebooks using python -m eval.ingest_real_world and annotate labels against eval/rubrics/reproducibility_rubric.md prior to freezing.",
+  "notebooks": {}
+}
