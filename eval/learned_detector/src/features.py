@@ -116,3 +116,49 @@ def extract_pipeline_features(code_str: str) -> np.ndarray:
 
 def extract_features_matrix(code_list: List[str]) -> np.ndarray:
     return np.array([extract_pipeline_features(c) for c in code_list], dtype=float)
+
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
+class PipelineFeatureUnionModel:
+    """
+    Combines structural AST feature extraction with TF-IDF and fits Random Forest.
+    Encapsulates all learned transformations inside training folds.
+    """
+    def __init__(self, n_estimators=100, max_depth=None, min_samples_leaf=1, random_state=42):
+        self.n_estimators = n_estimators
+        self.max_depth = max_depth
+        self.min_samples_leaf = min_samples_leaf
+        self.random_state = random_state
+        self.tfidf = TfidfVectorizer(max_features=100, token_pattern=r"(?u)\b[A-Za-z_]\w*\b", sublinear_tf=True)
+        self.rf = RandomForestClassifier(
+            n_estimators=n_estimators,
+            max_depth=max_depth,
+            min_samples_leaf=min_samples_leaf,
+            random_state=random_state,
+            n_jobs=-1
+        )
+
+    def _extract_all_features(self, texts, is_train=False):
+        struct_feats = extract_features_matrix(texts)
+        if is_train:
+            text_feats = self.tfidf.fit_transform(texts).toarray()
+        else:
+            text_feats = self.tfidf.transform(texts).toarray()
+        return np.hstack([struct_feats, text_feats])
+
+    def fit(self, texts, y):
+        X = self._extract_all_features(texts, is_train=True)
+        self.rf.fit(X, y)
+        return self
+
+    def predict(self, texts):
+        X = self._extract_all_features(texts, is_train=False)
+        return self.rf.predict(X)
+
+    def predict_proba(self, texts):
+        X = self._extract_all_features(texts, is_train=False)
+        return self.rf.predict_proba(X)
+

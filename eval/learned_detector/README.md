@@ -50,6 +50,19 @@ All commands use the dedicated Python 3.12 virtual environment:
 .\eval\learned_detector\venv\Scripts\python.exe eval\learned_detector\tests\test_gpu_smoke.py
 ```
 
+### Train and Evaluate Baselines and GNN:
+```powershell
+.\eval\learned_detector\venv\Scripts\python.exe eval\learned_detector\src\baseline_logreg.py
+.\eval\learned_detector\venv\Scripts\python.exe eval\learned_detector\src\baseline_rf.py
+.\eval\learned_detector\venv\Scripts\python.exe eval\learned_detector\src\gnn_model.py
+```
+
+### Run Yang External Evaluation Contract (Currently Blocked):
+```powershell
+.\eval\learned_detector\venv\Scripts\python.exe eval\learned_detector\src\evaluate_yang_contract.py > eval\learned_detector\results\yang_evaluation_results.json
+```
+*(Note: Current output only contains unscored predictions on local notebooks. Genuine evaluation requires teammate ground-truth and baseline predictions.)*
+
 ---
 
 ## 5. Artifacts and Reports
@@ -58,4 +71,6 @@ All commands use the dedicated Python 3.12 virtual environment:
 - **Generated Code Files**: `data/examples/`
 - **GPU Smoke Test Report**: [`reports/gpu_verification.json`](file:///c:/Users/arush/OneDrive/Desktop/pipelineguardian/eval/learned_detector/reports/gpu_verification.json)
 - **Label Verification Report**: [`reports/label_verification_report.md`](file:///c:/Users/arush/OneDrive/Desktop/pipelineguardian/eval/learned_detector/reports/label_verification_report.md)
+- **Comparative Evaluation Report**: [`reports/comparative_evaluation_report.md`](file:///c:/Users/arush/OneDrive/Desktop/pipelineguardian/eval/learned_detector/reports/comparative_evaluation_report.md)
+- **Yang Evaluation Results (Unscored Predictions)**: [`results/yang_evaluation_results.json`](file:///c:/Users/arush/OneDrive/Desktop/pipelineguardian/eval/learned_detector/results/yang_evaluation_results.json)
 - **Manual Sample Audit (30 Cases)**: [`reports/manual_inspection_sample.md`](file:///c:/Users/arush/OneDrive/Desktop/pipelineguardian/eval/learned_detector/reports/manual_inspection_sample.md)

@@ -5,8 +5,8 @@
     "max_depth": 5,
     "min_samples_leaf": 2
   },
-  "fit_time_sec": 0.3984363079071045,
-  "infer_time_sec": 0.15563106536865234,
+  "fit_time_sec": 2.0583178997039795,
+  "infer_time_sec": 0.6243076324462891,
   "grouped_cv_eval": {
     "macro_f1": 0.9814262023217246,
     "positive_class": {
@@ -186,7 +186,7 @@
       "positive_f1": 0.9850746268656716,
       "negative_f1": 0.9777777777777777,
       "pr_auc": 1.0,
-      "duration_sec": 3.802370309829712
+      "duration_sec": 3.4021313190460205
     },
     {
       "trial_id": 2,
@@ -200,7 +200,7 @@
       "positive_f1": 0.9850746268656716,
       "negative_f1": 0.9777777777777777,
       "pr_auc": 1.0,
-      "duration_sec": 4.372899532318115
+      "duration_sec": 4.214117765426636
     },
     {
       "trial_id": 3,
@@ -214,7 +214,7 @@
       "positive_f1": 0.9850746268656716,
       "negative_f1": 0.9777777777777777,
       "pr_auc": 1.0,
-      "duration_sec": 4.166842222213745
+      "duration_sec": 3.719589948654175
     },
     {
       "trial_id": 4,
@@ -228,7 +228,7 @@
       "positive_f1": 0.9850746268656716,
       "negative_f1": 0.9777777777777777,
       "pr_auc": 1.0,
-      "duration_sec": 5.048877000808716
+      "duration_sec": 13.477186918258667
     },
     {
       "trial_id": 5,
@@ -242,7 +242,7 @@
       "positive_f1": 0.9850746268656716,
       "negative_f1": 0.9777777777777777,
       "pr_auc": 1.0,
-      "duration_sec": 4.89162015914917
+      "duration_sec": 12.319963455200195
     }
   ],
   "stress_test_eval": {
