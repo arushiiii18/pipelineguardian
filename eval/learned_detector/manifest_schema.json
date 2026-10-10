@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LearnedDetectorSampleManifest",
+  "type": "object",
+  "required": [
+    "sample_id",
+    "base_id",
+    "mutation_type",
+    "label",
+    "reason",
+    "generator_version",
+    "seed",
+    "source_type",
+    "source_reference",
+    "input_hash",
+    "split",
+    "verification_status"
+  ],
+  "properties": {
+    "sample_id": {
+      "type": "string",
+      "description": "Unique identifier for this sample"
+    },
+    "base_id": {
+      "type": "string",
+      "description": "Identifier of the originating clean base pipeline"
+    },
+    "mutation_type": {
+      "type": "string",
+      "description": "Type of mutation applied (e.g., clean_base, fit_scaler_before_split, etc.)"
+    },
+    "label": {
+      "type": "integer",
+      "enum": [0, 1],
+      "description": "Ground truth binary label: 1 = preprocessing leakage, 0 = clean"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Detailed explanation of why this label was assigned"
+    },
+    "generator_version": {
+      "type": "string",
+      "description": "Semantic version or commit hash of the generator"
+    },
+    "seed": {
+      "type": "integer",
+      "description": "Random seed used during generation"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": ["script", "notebook"],
+      "description": "Representation format of the sample"
+    },
+    "source_reference": {
+      "type": "string",
+      "description": "Relative file path or inline key to the source code"
+    },
+    "input_hash": {
+      "type": "string",
+      "description": "SHA-256 hash of the normalized source code"
+    },
+    "split": {
+      "type": "string",
+      "enum": ["train", "val", "test", "unassigned"],
+      "description": "Split assignment adhering strictly to base_id grouping"
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": ["verified_clean", "verified_leakage", "unverified", "rejected", "inconclusive"],
+      "description": "Execution-based oracle verification outcome"
+    },
+
+    "verification_details": {
+      "type": "object",
+      "description": "Quantitative check metrics (e.g. scaler mean comparison, split bounds)"
+    }
+  }
+}

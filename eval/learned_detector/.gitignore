@@ -1,0 +1,8 @@
+# Ignore dedicated environment, generated example code files, checkpoints, and bytecode
+venv/
+__pycache__/
+*.pyc
+*.pt
+*.joblib
+*.pkl
+data/examples/

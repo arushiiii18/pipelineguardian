@@ -1,0 +1,38 @@
+{
+  "experiment_name": "learned_leakage_detector",
+  "version": "1.0.0",
+  "task": "binary_preprocessing_leakage",
+  "seed_policy": {
+    "global_seed": 42,
+    "numpy_seed": 42,
+    "torch_seed": 42,
+    "python_seed": 42
+  },
+  "dataset_spec": {
+    "num_base_pipelines": 30,
+    "target_generated_range": [600, 900],
+    "held_out_base_count": 6,
+    "grouped_cv_splits": 5
+  },
+  "hardware": {
+    "target_device": "cuda",
+    "gpu_name": "NVIDIA GeForce RTX 2050 Laptop GPU",
+    "vram_limit_gb": 4.0,
+    "mixed_precision": true,
+    "allow_cpu_fallback_for_gnn": false
+  },
+  "models": {
+    "baseline_logistic_regression": {
+      "type": "tfidf_logreg",
+      "solver": "liblinear"
+    },
+    "baseline_random_forest": {
+      "type": "random_forest",
+      "n_estimators": 100
+    },
+    "experimental_gnn": {
+      "type": "plain_pytorch_gin",
+      "hard_gate_deadline_day": 6
+    }
+  }
+}
