@@ -1,0 +1,21 @@
+{
+  "interpreter": "C:\\Users\\arush\\OneDrive\\Desktop\\pipelineguardian\\eval\\learned_detector\\venv\\Scripts\\python.exe",
+  "python_version": "3.12.7 (tags/v3.12.7:0b05ead, Oct  1 2024, 03:06:41) [MSC v.1941 64 bit (AMD64)]",
+  "pytorch_version": "2.5.1+cu121",
+  "cuda_available": true,
+  "cuda_version": "12.1",
+  "cudnn_version": 90100,
+  "device_count": 1,
+  "device_name": "NVIDIA GeForce RTX 2050",
+  "device_capability": [
+    8,
+    6
+  ],
+  "total_memory_bytes": 4294443008,
+  "tensor_ops_passed": true,
+  "nn_forward_backward_passed": true,
+  "params_on_cuda": true,
+  "gradient_step_passed": true,
+  "allocated_memory_bytes": 17180672,
+  "reserved_memory_bytes": 23068672
+}

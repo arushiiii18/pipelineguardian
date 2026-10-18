@@ -1,0 +1,550 @@
+{
+  "experiment": "PipelineGuardian Phase 5 Synthetic Robustness Checks",
+  "timestamp_iso": "2026-10-10T07:50:46Z",
+  "dataset_summary": {
+    "train_val_samples": 448,
+    "train_val_base_pipelines": 24,
+    "held_out_samples": 103,
+    "held_out_base_pipelines": 6
+  },
+  "rejection_audit": {
+    "total_generated_candidates": 720,
+    "verified_sound_count": 551,
+    "total_rejected": 161,
+    "total_inconclusive": 8,
+    "per_mutation_type": {
+      "clean_base": {
+        "total": 30,
+        "verified_clean": 18,
+        "verified_leakage": 0,
+        "rejected": 10,
+        "inconclusive": 2
+      },
+      "clean_variant_reordered": {
+        "total": 30,
+        "verified_clean": 8,
+        "verified_leakage": 0,
+        "rejected": 21,
+        "inconclusive": 1
+      },
+      "clean_subsample_fit": {
+        "total": 30,
+        "verified_clean": 18,
+        "verified_leakage": 0,
+        "rejected": 10,
+        "inconclusive": 2
+      },
+      "clean_pipeline_encapsulation": {
+        "total": 30,
+        "verified_clean": 30,
+        "verified_leakage": 0,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "clean_function_wrapped": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 0,
+        "rejected": 30,
+        "inconclusive": 0
+      },
+      "clean_columntransformer": {
+        "total": 30,
+        "verified_clean": 30,
+        "verified_leakage": 0,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "clean_seed_variation_1": {
+        "total": 30,
+        "verified_clean": 18,
+        "verified_leakage": 0,
+        "rejected": 10,
+        "inconclusive": 2
+      },
+      "clean_seed_variation_2": {
+        "total": 30,
+        "verified_clean": 20,
+        "verified_leakage": 0,
+        "rejected": 10,
+        "inconclusive": 0
+      },
+      "clean_seed_variation_3": {
+        "total": 30,
+        "verified_clean": 19,
+        "verified_leakage": 0,
+        "rejected": 10,
+        "inconclusive": 1
+      },
+      "clean_seed_variation_4": {
+        "total": 30,
+        "verified_clean": 20,
+        "verified_leakage": 0,
+        "rejected": 10,
+        "inconclusive": 0
+      },
+      "clean_seed_variation_5": {
+        "total": 30,
+        "verified_clean": 20,
+        "verified_leakage": 0,
+        "rejected": 10,
+        "inconclusive": 0
+      },
+      "clean_seed_variation_6": {
+        "total": 30,
+        "verified_clean": 20,
+        "verified_leakage": 0,
+        "rejected": 10,
+        "inconclusive": 0
+      },
+      "scaler_fit_before_split": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "imputer_fit_before_split": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "concat_leakage": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "transformer_fit_on_test": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 0,
+        "rejected": 30,
+        "inconclusive": 0
+      },
+      "columntransformer_fit_before_split": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "scaler_fit_before_split_var1": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "concat_leakage_var2": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "scaler_fit_before_split_var3": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "concat_leakage_var4": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "scaler_fit_before_split_var5": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "concat_leakage_var6": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      },
+      "scaler_fit_before_split_var7": {
+        "total": 30,
+        "verified_clean": 0,
+        "verified_leakage": 30,
+        "rejected": 0,
+        "inconclusive": 0
+      }
+    },
+    "rejection_root_causes": {
+      "clean_function_wrapped": "All 30 candidates rejected: function wrapping encapsulation altered namespace scope and prevented direct execution oracle variable-state inspection.",
+      "transformer_fit_on_test": "All 30 candidates rejected: fitting solely on held-out test data caused execution failure or undefined transformation matrix in oracle checks.",
+      "clean_seed_variation_1_to_6": "60 candidates rejected: seed variance produced non-differentiating train/test split partitions where leakage metric was within statistical margin of clean baseline.",
+      "clean_variant_reordered": "21 rejected, 1 inconclusive: reordering statements caused variable-assignment dependency conflicts during isolated AST re-execution.",
+      "clean_base_and_subsample_fit": "10 rejected each: synthetic edge case dataset generation edge failures caught by strict execution oracle."
+    }
+  },
+  "feature_ablation": {
+    "rf": {
+      "full": {
+        "description": "Full Model (17 Structural + 1000 TF-IDF n-grams)",
+        "grouped_cv": {
+          "macro_f1": 0.9814,
+          "fold_f1_std": 0.0386,
+          "pos_precision": 0.9706,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9851
+        },
+        "held_out_test": {
+          "macro_f1": 0.9894,
+          "pos_precision": 0.9851,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9925,
+          "confusion_matrix": {
+            "tn": 36,
+            "fp": 1,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      },
+      "no_shortcuts": {
+        "description": "Ablated: No Shortcut/Ordering Features (AST counts 0-12 + TF-IDF)",
+        "grouped_cv": {
+          "macro_f1": 0.9767,
+          "fold_f1_std": 0.0373,
+          "pos_precision": 0.9635,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9814
+        },
+        "held_out_test": {
+          "macro_f1": 0.9894,
+          "pos_precision": 0.9851,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9925,
+          "confusion_matrix": {
+            "tn": 36,
+            "fp": 1,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      },
+      "tfidf_only": {
+        "description": "Ablated: TF-IDF Only (No Structural Features)",
+        "grouped_cv": {
+          "macro_f1": 0.9814,
+          "fold_f1_std": 0.0386,
+          "pos_precision": 0.9706,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9851
+        },
+        "held_out_test": {
+          "macro_f1": 0.9894,
+          "pos_precision": 0.9851,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9925,
+          "confusion_matrix": {
+            "tn": 36,
+            "fp": 1,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      },
+      "structural_only_full": {
+        "description": "Ablated: Structural Only (All 17 Features, No TF-IDF)",
+        "grouped_cv": {
+          "macro_f1": 0.9814,
+          "fold_f1_std": 0.0402,
+          "pos_precision": 0.9706,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9851
+        },
+        "held_out_test": {
+          "macro_f1": 1.0,
+          "pos_precision": 1.0,
+          "pos_recall": 1.0,
+          "pos_f1": 1.0,
+          "confusion_matrix": {
+            "tn": 37,
+            "fp": 0,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      },
+      "structural_only_no_shortcuts": {
+        "description": "Ablated: Structural Only without Shortcuts (Features 0-12, No TF-IDF)",
+        "grouped_cv": {
+          "macro_f1": 0.9814,
+          "fold_f1_std": 0.0386,
+          "pos_precision": 0.9706,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9851
+        },
+        "held_out_test": {
+          "macro_f1": 1.0,
+          "pos_precision": 1.0,
+          "pos_recall": 1.0,
+          "pos_f1": 1.0,
+          "confusion_matrix": {
+            "tn": 37,
+            "fp": 0,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      }
+    },
+    "logreg": {
+      "full": {
+        "description": "Full Model (17 Structural + 1000 TF-IDF n-grams)",
+        "grouped_cv": {
+          "macro_f1": 0.9649,
+          "fold_f1_std": 0.0454,
+          "pos_precision": 0.9462,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9724
+        },
+        "held_out_test": {
+          "macro_f1": 1.0,
+          "pos_precision": 1.0,
+          "pos_recall": 1.0,
+          "pos_f1": 1.0,
+          "confusion_matrix": {
+            "tn": 37,
+            "fp": 0,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      },
+      "no_shortcuts": {
+        "description": "Ablated: No Shortcut/Ordering Features (AST counts 0-12 + TF-IDF)",
+        "grouped_cv": {
+          "macro_f1": 0.9838,
+          "fold_f1_std": 0.0335,
+          "pos_precision": 0.9742,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9869
+        },
+        "held_out_test": {
+          "macro_f1": 1.0,
+          "pos_precision": 1.0,
+          "pos_recall": 1.0,
+          "pos_f1": 1.0,
+          "confusion_matrix": {
+            "tn": 37,
+            "fp": 0,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      },
+      "tfidf_only": {
+        "description": "Ablated: TF-IDF Only (No Structural Features)",
+        "grouped_cv": {
+          "macro_f1": 0.9767,
+          "fold_f1_std": 0.0389,
+          "pos_precision": 0.9635,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9814
+        },
+        "held_out_test": {
+          "macro_f1": 0.9786,
+          "pos_precision": 0.9706,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9851,
+          "confusion_matrix": {
+            "tn": 35,
+            "fp": 2,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      },
+      "structural_only_full": {
+        "description": "Ablated: Structural Only (All 17 Features, No TF-IDF)",
+        "grouped_cv": {
+          "macro_f1": 0.9649,
+          "fold_f1_std": 0.0454,
+          "pos_precision": 0.9462,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9724
+        },
+        "held_out_test": {
+          "macro_f1": 1.0,
+          "pos_precision": 1.0,
+          "pos_recall": 1.0,
+          "pos_f1": 1.0,
+          "confusion_matrix": {
+            "tn": 37,
+            "fp": 0,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      },
+      "structural_only_no_shortcuts": {
+        "description": "Ablated: Structural Only without Shortcuts (Features 0-12, No TF-IDF)",
+        "grouped_cv": {
+          "macro_f1": 0.9649,
+          "fold_f1_std": 0.0449,
+          "pos_precision": 0.9462,
+          "pos_recall": 1.0,
+          "pos_f1": 0.9724
+        },
+        "held_out_test": {
+          "macro_f1": 1.0,
+          "pos_precision": 1.0,
+          "pos_recall": 1.0,
+          "pos_f1": 1.0,
+          "confusion_matrix": {
+            "tn": 37,
+            "fp": 0,
+            "fn": 0,
+            "tp": 66
+          }
+        }
+      }
+    }
+  },
+  "contrast_pairs": {
+    "Random Forest": {
+      "total_contrast_pairs": 72,
+      "pairwise_flip_accuracy": 0.9444,
+      "clean_accuracy": 0.9444,
+      "leaky_accuracy": 1.0,
+      "held_out_pairs": 12,
+      "held_out_pairwise_flip_accuracy": 0.6667
+    },
+    "Logistic Regression": {
+      "total_contrast_pairs": 72,
+      "pairwise_flip_accuracy": 1.0,
+      "clean_accuracy": 1.0,
+      "leaky_accuracy": 1.0,
+      "held_out_pairs": 12,
+      "held_out_pairwise_flip_accuracy": 1.0
+    }
+  },
+  "cluster_bootstrap": {
+    "Random Forest": {
+      "cluster_level": "base_pipeline_id",
+      "clusters_count": 6,
+      "total_variants": 103,
+      "n_bootstraps": 1000,
+      "point_estimates": {
+        "macro_f1": 0.9894,
+        "precision": 0.9851,
+        "recall": 1.0
+      },
+      "bootstrap_95_ci": {
+        "macro_f1": [
+          0.9712,
+          1.0
+        ],
+        "precision": [
+          0.9565,
+          1.0
+        ],
+        "recall": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "Logistic Regression": {
+      "cluster_level": "base_pipeline_id",
+      "clusters_count": 6,
+      "total_variants": 103,
+      "n_bootstraps": 1000,
+      "point_estimates": {
+        "macro_f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "bootstrap_95_ci": {
+        "macro_f1": [
+          1.0,
+          1.0
+        ],
+        "precision": [
+          1.0,
+          1.0
+        ],
+        "recall": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  },
+  "gnn_multiseed": {
+    "device_used": "cuda",
+    "gpu_name": "NVIDIA GeForce RTX 2050",
+    "seeds_evaluated": [
+      42,
+      100,
+      2024,
+      777,
+      9999
+    ],
+    "per_seed_results": [
+      {
+        "seed": 42,
+        "macro_f1": 0.8505,
+        "precision": 0.8824,
+        "recall": 0.9091,
+        "accuracy": 0.8641
+      },
+      {
+        "seed": 100,
+        "macro_f1": 0.8505,
+        "precision": 0.8824,
+        "recall": 0.9091,
+        "accuracy": 0.8641
+      },
+      {
+        "seed": 2024,
+        "macro_f1": 0.8505,
+        "precision": 0.8824,
+        "recall": 0.9091,
+        "accuracy": 0.8641
+      },
+      {
+        "seed": 777,
+        "macro_f1": 0.664,
+        "precision": 0.7317,
+        "recall": 0.9091,
+        "accuracy": 0.7282
+      },
+      {
+        "seed": 9999,
+        "macro_f1": 0.8621,
+        "precision": 0.8955,
+        "recall": 0.9091,
+        "accuracy": 0.8738
+      }
+    ],
+    "aggregated": {
+      "macro_f1_mean": 0.8155,
+      "macro_f1_std": 0.0759,
+      "precision_mean": 0.8549,
+      "precision_std": 0.0618,
+      "recall_mean": 0.9091,
+      "recall_std": 0.0,
+      "accuracy_mean": 0.8389,
+      "accuracy_std": 0.0555
+    },
+    "gnn_stress_test_investigation": {
+      "root_cause_for_pending_status": "In baseline_rf.py and baseline_logreg.py, run_rf_stress_test ran 22 separate leave-one-mutation folds. For the GNN, retraining 22 distinct PyTorch GIN models across all mutation folds was not instantiated in gnn_model.py to avoid GPU execution timeout during the baseline training run. The multi-seed evaluation above and AST feature ablation confirm that graph-level message passing exhibits higher variance across initializations (macro-F1 std=0.0759) compared to deterministic feature union models."
+    }
+  }
+}

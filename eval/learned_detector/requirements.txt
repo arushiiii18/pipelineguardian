@@ -1,0 +1,9 @@
+# Dedicated dependencies for eval/learned_detector experiment
+# PyTorch is installed with CUDA via --index-url https://download.pytorch.org/whl/cu121
+numpy>=1.26.0,<3.0.0
+scipy>=1.12.0
+pandas>=2.2.0
+scikit-learn>=1.4.0
+networkx>=3.2.0
+nbformat>=5.9.0
+pytest>=8.0.0
